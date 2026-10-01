@@ -1,18 +1,17 @@
-/* ===== PALETA (cambiar aquí los colores en grupo) =====
-   Fondo oscuro: #0F172A | Azul principal: #1D4ED8 | Acento: #F59E0B
-   Fondo claro: #F1F5F9 | Tarjetas: #FFFFFF | Texto: #1E293B
-   Texto secundario: #64748B | Borde suave: #E2E8F0
+@import url('https://fonts.googleapis.com/css2?family=Caacupe+One&family=Coiny&family=Grandstander:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Vai&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+/* Fondo oscuro: #0F172A  Azul principal: #1D4ED8  Acento: #F59E0B
+   Fondo claro: #F1F5F9  Tarjetas: #FFFFFF  Texto: #1E293B
+   Texto secundario: #64748B  Borde suave: #E2E8F0
    Capa sobre imágenes: rgba(15, 23, 42, 0.65) */
 
-/* ===== REINICIO BÁSICO =====
-   Quita márgenes y rellenos por defecto y hace que el ancho incluya el relleno */
+/*Quita márgenes y rellenos por defecto y hace que el ancho incluya el relleno */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ===== TIPOGRAFÍA GENERAL (se hereda a todo el sitio) ===== */
 body {
   font-family: 'Sansation', Arial, sans-serif;
   font-size: 16px;
@@ -40,8 +39,7 @@ p {
   margin-bottom: 14px;
 }
 
-/* ===== ENCABEZADO Y MENÚ ===== */
-/* flex: logo a la izquierda y menú a la derecha, en una sola fila */
+/*ENCABEZADO Y MENÚ*/
 .encabezado {
   display: flex;
   justify-content: space-between;
@@ -55,7 +53,6 @@ p {
   height: auto;
 }
 
-/* display: flex coloca los enlaces en una fila horizontal */
 .menu-principal {
   display: flex;
   align-items: center;
@@ -92,7 +89,7 @@ p {
   color: #0F172A;
 }
 
-/* ===== BOTONES ===== */
+/* botones*/
 .boton {
   display: inline-flex;
   padding: 14px 28px;
@@ -127,14 +124,13 @@ p {
   color: #F59E0B;
 }
 
-/* ===== SECCIONES ===== */
+/* secciones*/
 .seccion {
   padding: 60px 40px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-/* Las franjas de color ocupan todo el ancho; el contenido se centra con .seccion */
 .seccion-clara {
   max-width: none;
   background-color: #F1F5F9;
@@ -162,12 +158,13 @@ p {
   margin: 20px auto 0 auto;
 }
 
-/* ===== CUADRÍCULA DE TARJETAS =====
-   Excepción permitida: CSS Grid para una cuadrícula de tarjetas (3 columnas) */
+/* cuadricula de tarjetas*/
 .cuadricula {
+  max-width: 900px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  margin: 30px auto 0;
   margin-top: 30px;
 }
 
@@ -204,7 +201,7 @@ p {
   margin-bottom: 14px;
 }
 
-/* ===== LISTAS ===== */
+/* listas*/
 .razones,
 .pasos {
   max-width: 800px;
@@ -224,7 +221,7 @@ p {
   font-weight: 700;
 }
 
-/* ===== TABLAS DE DATOS ===== */
+/* tablas de datos*/
 .ficha {
   width: 100%;
   margin-top: 20px;
@@ -249,7 +246,7 @@ p {
   border: 1px solid #E2E8F0;
 }
 
-/* ===== ENCABEZADO DE PÁGINA (Flota, Nosotros, Contacto) ===== */
+/* ENCABEZADO DE PÁGINA*/
 .banner-pagina {
   background-size: cover;
   background-position: center;
@@ -268,7 +265,7 @@ p {
   margin-right: auto;
 }
 
-/* ===== CIERRE CON LLAMADA A LA ACCIÓN ===== */
+/* cierre*/
 .cierre {
   background-color: #1D4ED8;
   color: #FFFFFF;
@@ -281,7 +278,7 @@ p {
   margin-bottom: 24px;
 }
 
-/* ===== PIE DE PÁGINA ===== */
+/*PIE DE PÁGINA*/
 .pie {
   background-color: #0F172A;
   color: #FFFFFF;
@@ -320,20 +317,35 @@ p {
   margin-bottom: 0;
 }
 
-/* ===== MEJORAS ESTETICAS Y ANIMACIONES ===== */
-.encabezado { position: sticky; top: 0; z-index: 1000; }
-a, .boton, .tarjeta, input, select, textarea { transition: all 0.3s ease; }
-.titulo-seccion, .subtitulo, .cierre, .banner-pagina .capa { text-align: center; }
-.banner-pagina .capa, .banner-inicio .capa { animation: aparecer 1s ease; }
-.tarjeta:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(15,23,42,.15); }
-.boton:hover { transform: scale(1.05); }
-input:focus, select:focus, textarea:focus { outline:none; border-color:#1D4ED8; box-shadow:0 0 8px rgba(29,78,216,.25); }
+/*MEJORAS ESTETICAS Y ANIMACIONES */
+.encabezado { 
+  position: sticky; top: 0; z-index: 1000; 
+}
+a, .boton, .tarjeta, input, select, textarea { 
+  transition: all 0.3s ease; 
+}
+.titulo-seccion, .subtitulo, .cierre, .banner-pagina .capa { 
+  text-align: center; 
+}
+.banner-pagina .capa, .banner-inicio .capa { 
+  animation: aparecer 1s ease; 
+}
+.tarjeta:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 12px 25px rgba(15,23,42,.15); 
+}
+.boton:hover { 
+  transform: scale(1.05); 
+}
+input:focus, select:focus, textarea:focus { 
+  outline:none; border-color:#1D4ED8; box-shadow:0 0 8px rgba(29,78,216,.25); 
+}
 @keyframes aparecer { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
 .menu-principal { justify-content:center; }
 
-/* ===== DISEÑO ADAPTABLE (media query permitida) ===== */
+/* DISEÑO ADAPTABLE */
 @media (max-width: 768px) {
-  /* Menú siempre horizontal y arriba: el encabezado pasa a dos filas */
+  /* Menú siempre horizontal y arriba*/
   .encabezado {
     flex-direction: column;
     gap: 10px;

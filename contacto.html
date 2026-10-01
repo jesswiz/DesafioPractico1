@@ -2,18 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- El viewport permite el diseño adaptable en móvil -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Solicita tu cotización de maquinaria pesada con operador a LogicTrans.">
   <title>Contacto y cotización | LogicTrans</title>
-  <!-- Fuente externa permitida: Inter de Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap">
-  <!-- base.css va primero; luego el CSS propio de la página -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/contacto.css">
 </head>
 <body>
-  <!-- ===== ENCABEZADO Y MENÚ (igual en las 4 páginas) ===== -->
   <header class="encabezado">
     <a href="index.html"><img class="logo" src="img/logo-logictrans.svg" alt="Logo de LogicTrans" width="200" height="50"></a>
     <nav>
@@ -28,7 +23,6 @@
   </header>
 
   <main>
-  <!-- ===== ENCABEZADO DE PÁGINA ===== -->
   <section class="banner-pagina banner-contacto">
     <div class="capa">
       <h1>Solicita tu cotización</h1>
@@ -36,23 +30,21 @@
     </div>
   </section>
 
-  <!-- ===== FORMULARIO Y DATOS DE CONTACTO ===== -->
   <section class="seccion">
     <div class="contacto-fila">
-      <!-- action="#" porque no hay servidor; la validación usa solo atributos HTML -->
+
       <form class="formulario" action="#" method="get">
         <fieldset>
+          
           <legend>Datos de contacto</legend>
           <label for="nombre">Nombre completo</label>
-          <!-- required: obligatorio; minlength/maxlength: largo permitido -->
           <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="60">
           <label for="empresa">Empresa</label>
           <input type="text" id="empresa" name="empresa" required>
           <label for="correo">Correo electrónico</label>
           <input type="email" id="correo" name="correo" required>
           <label for="telefono">Teléfono</label>
-          <!-- pattern: exige exactamente 8 dígitos -->
-          <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{8}" placeholder="71234567">
+          <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{8}" placeholder="67676767">
           <span class="nota">8 dígitos, sin guiones ni código de país.</span>
         </fieldset>
         <fieldset>
@@ -92,15 +84,15 @@
       <aside class="datos-contacto">
         <h2>Datos de contacto</h2>
         <p><b>Dirección:</b> Col. Escalón, San Salvador, El Salvador</p>
-        <p><b>Teléfono:</b> +503 2222-0000</p>
-        <p><b>WhatsApp:</b> +503 7000-0000</p>
-        <p><b>Correo:</b> cotizaciones@logictrans.example</p>
+        <p><b>Teléfono:</b> +503 1234-0000</p>
+        <p><b>WhatsApp:</b> +503 0000-5678</p>
+        <p><b>Correo:</b> cotizaciones@logictrans.com</p>
         <table class="ficha">
           <caption>Horario de atención</caption>
           <thead><tr><th>Día</th><th>Horario</th></tr></thead>
           <tbody>
-            <tr><td>Lunes a viernes</td><td>7:00 a. m.–5:00 p. m.</td></tr>
-            <tr><td>Sábado</td><td>7:00 a. m.–12:00 m.</td></tr>
+            <tr><td>Lunes a viernes</td><td>7:00 a. m. 5:00 p. m.</td></tr>
+            <tr><td>Sábado</td><td>7:00 a. m. 12:00 m.</td></tr>
             <tr><td>Domingo</td><td>Cerrado</td></tr>
           </tbody>
         </table>
@@ -108,7 +100,6 @@
     </div>
   </section>
 
-  <!-- ===== QUÉ PASA DESPUÉS ===== -->
   <section class="seccion seccion-clara">
     <h2 class="titulo-seccion">¿Qué pasa después de enviar?</h2>
     <ol class="pasos">
@@ -118,23 +109,21 @@
     </ol>
   </section>
 
-  <!-- ===== OTRAS VÍAS ===== -->
   <section class="seccion">
     <h2 class="titulo-seccion">Otras vías de contacto</h2>
     <div class="dos-columnas">
-      <article class="tarjeta"><div class="tarjeta-texto"><h3>Llámanos</h3><p>+503 2222-0000<br>Atención directa en horario de oficina.</p></div></article>
-      <article class="tarjeta"><div class="tarjeta-texto"><h3>Escríbenos</h3><p>cotizaciones@logictrans.example<br>Adjunta planos o fotos de la obra si los tienes.</p></div></article>
+      <article class="tarjeta"><div class="tarjeta-texto"><h3>Llámanos</h3><p>+503 1234-0000<br>Atención directa en horario de oficina.</p></div></article>
+      <article class="tarjeta"><div class="tarjeta-texto"><h3>Escríbenos</h3><p>cotizaciones@logictrans.com<br>Adjunta planos o fotos de la obra si los tienes.</p></div></article>
     </div>
   </section>
   </main>
 
-  <!-- ===== PIE DE PÁGINA (igual en las 4 páginas) ===== -->
   <footer class="pie">
     <div class="pie-contenido">
       <div class="pie-bloque">
         <h2>LogicTrans</h2>
         <p>Col. Escalón, San Salvador, El Salvador<br>Tel. +503 2222-0000</p>
-        <p>Lunes a viernes 7:00 a. m.–5:00 p. m.<br>Sábado 7:00 a. m.–12:00 m.</p>
+        <p>Lunes a viernes 7:00 a. m. 5:00 p. m.<br>Sábado 7:00 a. m. 12:00 m.</p>
       </div>
       <div class="pie-bloque">
         <h2>Enlaces rápidos</h2>

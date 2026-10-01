@@ -1,9 +1,5 @@
-/* ===== ENCABEZADO DE PÁGINA ===== */
-/* Imagen de fondo con background-size: cover (excepción permitida) */
 .banner-flota {
   background-image: url(../img/banner-flota.jpg);
   background-size: cover;
   background-position: center;
 }
-
-/* Las tarjetas del catálogo heredan la cuadrícula de base.css (3, 2 y 1 columnas) */
