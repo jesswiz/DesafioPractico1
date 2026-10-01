@@ -1,0 +1,386 @@
+/* ===== PALETA (cambiar aquí los colores en grupo) =====
+   Fondo oscuro: #0F172A | Azul principal: #1D4ED8 | Acento: #F59E0B
+   Fondo claro: #F1F5F9 | Tarjetas: #FFFFFF | Texto: #1E293B
+   Texto secundario: #64748B | Borde suave: #E2E8F0
+   Capa sobre imágenes: rgba(15, 23, 42, 0.65) */
+
+/* ===== REINICIO BÁSICO =====
+   Quita márgenes y rellenos por defecto y hace que el ancho incluya el relleno */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== TIPOGRAFÍA GENERAL (se hereda a todo el sitio) ===== */
+body {
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 16px;
+  color: #1E293B;
+  background-color: #FFFFFF;
+}
+
+h1 {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+/* ===== ENCABEZADO Y MENÚ ===== */
+/* flex: logo a la izquierda y menú a la derecha, en una sola fila */
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  background-color: #0F172A;
+}
+
+.logo {
+  width: 160px;
+  height: auto;
+}
+
+/* display: flex coloca los enlaces en una fila horizontal */
+.menu-principal {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style-type: none;
+}
+
+.menu-principal a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.menu-principal a:hover {
+  color: #F59E0B;
+}
+
+/* La página actual se ve distinta */
+.menu-principal a.activo {
+  color: #F59E0B;
+  border-bottom: 2px solid #F59E0B;
+}
+
+/* Botón destacado del menú */
+.menu-principal a.boton-menu {
+  background-color: #F59E0B;
+  color: #0F172A;
+  padding: 10px 18px;
+  border-radius: 8px;
+}
+
+.menu-principal a.boton-menu:hover {
+  background-color: #FFFFFF;
+  color: #0F172A;
+}
+
+/* ===== BOTONES ===== */
+.boton {
+  display: inline-flex;
+  padding: 14px 28px;
+  background-color: #F59E0B;
+  color: #0F172A;
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+}
+
+.boton:hover {
+  background-color: #FFFFFF;
+}
+
+.boton-claro {
+  background-color: #FFFFFF;
+}
+
+.boton-claro:hover {
+  background-color: #F59E0B;
+}
+
+.enlace {
+  color: #1D4ED8;
+  font-weight: 700;
+}
+
+.enlace:hover {
+  color: #F59E0B;
+}
+
+/* ===== SECCIONES ===== */
+.seccion {
+  padding: 60px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Las franjas de color ocupan todo el ancho; el contenido se centra con .seccion */
+.seccion-clara {
+  max-width: none;
+  background-color: #F1F5F9;
+}
+
+.seccion-oscura {
+  max-width: none;
+  background-color: #0F172A;
+  color: #FFFFFF;
+}
+
+.titulo-seccion {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #64748B;
+  margin-bottom: 30px;
+}
+
+.texto-ancho {
+  max-width: 800px;
+  margin: 20px auto 0 auto;
+}
+
+/* ===== CUADRÍCULA DE TARJETAS =====
+   Excepción permitida: CSS Grid para una cuadrícula de tarjetas (3 columnas) */
+.cuadricula {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.dos-columnas {
+  display: flex;
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.dos-columnas > * {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.tarjeta {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+}
+
+.tarjeta img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px 12px 0 0;
+}
+
+.tarjeta-texto {
+  padding: 20px;
+}
+
+.tarjeta ul {
+  padding-left: 22px;
+  margin-bottom: 14px;
+}
+
+/* ===== LISTAS ===== */
+.razones,
+.pasos {
+  max-width: 800px;
+  margin: 20px auto 0 auto;
+  padding-left: 30px;
+}
+
+.razones li,
+.pasos li {
+  margin-bottom: 10px;
+}
+
+/* ::marker cambia el color de las viñetas */
+.razones li::marker,
+.pasos li::marker {
+  color: #F59E0B;
+  font-weight: 700;
+}
+
+/* ===== TABLAS DE DATOS ===== */
+.ficha {
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+}
+
+.ficha caption {
+  font-weight: 700;
+  padding: 10px;
+}
+
+.ficha th {
+  background-color: #1D4ED8;
+  color: #FFFFFF;
+  text-align: left;
+}
+
+.ficha th,
+.ficha td {
+  padding: 12px;
+  border: 1px solid #E2E8F0;
+}
+
+/* ===== ENCABEZADO DE PÁGINA (Flota, Nosotros, Contacto) ===== */
+.banner-pagina {
+  background-size: cover;
+  background-position: center;
+}
+
+.capa {
+  background-color: rgba(15, 23, 42, 0.65);
+  color: #FFFFFF;
+  padding: 70px 40px;
+}
+
+.capa h1,
+.capa p {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== CIERRE CON LLAMADA A LA ACCIÓN ===== */
+.cierre {
+  background-color: #1D4ED8;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.cierre p {
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+/* ===== PIE DE PÁGINA ===== */
+.pie {
+  background-color: #0F172A;
+  color: #FFFFFF;
+  padding: 40px;
+}
+
+.pie-contenido {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.pie h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.pie ul {
+  list-style-type: none;
+}
+
+.pie a {
+  color: #FFFFFF;
+}
+
+.pie a:hover {
+  color: #F59E0B;
+}
+
+.derechos {
+  text-align: center;
+  color: #64748B;
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+/* ===== MEJORAS ESTETICAS Y ANIMACIONES ===== */
+.encabezado { position: sticky; top: 0; z-index: 1000; }
+a, .boton, .tarjeta, input, select, textarea { transition: all 0.3s ease; }
+.titulo-seccion, .subtitulo, .cierre, .banner-pagina .capa { text-align: center; }
+.banner-pagina .capa, .banner-inicio .capa { animation: aparecer 1s ease; }
+.tarjeta:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(15,23,42,.15); }
+.boton:hover { transform: scale(1.05); }
+input:focus, select:focus, textarea:focus { outline:none; border-color:#1D4ED8; box-shadow:0 0 8px rgba(29,78,216,.25); }
+@keyframes aparecer { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+.menu-principal { justify-content:center; }
+
+/* ===== DISEÑO ADAPTABLE (media query permitida) ===== */
+@media (max-width: 768px) {
+  /* Menú siempre horizontal y arriba: el encabezado pasa a dos filas */
+  .encabezado {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .menu-principal {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .seccion {
+    padding: 40px 16px;
+  }
+
+  .capa {
+    padding: 40px 16px;
+  }
+
+  .cuadricula {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dos-columnas,
+  .pie-contenido {
+    flex-direction: column;
+  }
+
+  .ficha th,
+  .ficha td {
+    padding: 6px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cuadricula {
+    grid-template-columns: 1fr;
+  }
+}

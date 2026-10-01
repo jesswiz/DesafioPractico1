@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <!-- El viewport permite el diseño adaptable en móvil -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Solicita tu cotización de maquinaria pesada con operador a LogicTrans.">
+  <title>Contacto y cotización | LogicTrans</title>
+  <!-- Fuente externa permitida: Inter de Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap">
+  <!-- base.css va primero; luego el CSS propio de la página -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/contacto.css">
+</head>
+<body>
+  <!-- ===== ENCABEZADO Y MENÚ (igual en las 4 páginas) ===== -->
+  <header class="encabezado">
+    <a href="index.html"><img class="logo" src="img/logo-logictrans.svg" alt="Logo de LogicTrans" width="200" height="50"></a>
+    <nav>
+      <ul class="menu-principal">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="flota.html">Flota</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="contacto.html" class="activo">Contacto</a></li>
+      <li><a class="boton-menu" href="contacto.html">Solicitar cotización</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+  <!-- ===== ENCABEZADO DE PÁGINA ===== -->
+  <section class="banner-pagina banner-contacto">
+    <div class="capa">
+      <h1>Solicita tu cotización</h1>
+      <p>Completa el formulario y te respondemos en menos de 24 horas.</p>
+    </div>
+  </section>
+
+  <!-- ===== FORMULARIO Y DATOS DE CONTACTO ===== -->
+  <section class="seccion">
+    <div class="contacto-fila">
+      <!-- action="#" porque no hay servidor; la validación usa solo atributos HTML -->
+      <form class="formulario" action="#" method="get">
+        <fieldset>
+          <legend>Datos de contacto</legend>
+          <label for="nombre">Nombre completo</label>
+          <!-- required: obligatorio; minlength/maxlength: largo permitido -->
+          <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="60">
+          <label for="empresa">Empresa</label>
+          <input type="text" id="empresa" name="empresa" required>
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required>
+          <label for="telefono">Teléfono</label>
+          <!-- pattern: exige exactamente 8 dígitos -->
+          <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{8}" placeholder="71234567">
+          <span class="nota">8 dígitos, sin guiones ni código de país.</span>
+        </fieldset>
+        <fieldset>
+          <legend>Datos del servicio</legend>
+          <label for="equipo">Tipo de equipo</label>
+          <select id="equipo" name="equipo" required>
+            <option value="">Selecciona un equipo</option>
+            <option value="lowboy">Lowboy (cama baja)</option><option value="camion-cisterna">Camión cisterna</option><option value="camion-volteo">Camión volteo</option><option value="bulldozer">Bulldozer (tractor de orugas)</option><option value="excavadora">Excavadora</option><option value="retroexcavadora">Retroexcavadora</option><option value="montacargas">Montacargas (elevador de carga)</option><option value="motoniveladora">Motoniveladora</option><option value="rodillo-compactador">Rodillo compactador</option>
+          </select>
+          <label for="cantidad">Cantidad de equipos</label>
+          <input type="number" id="cantidad" name="cantidad" required min="1" max="20">
+          <label for="inicio">Fecha estimada de inicio</label>
+          <input type="date" id="inicio" name="inicio" required>
+          <label for="duracion">Duración estimada (días)</label>
+          <input type="number" id="duracion" name="duracion" required min="1" max="365">
+          <label for="ubicacion">Ubicación de la obra</label>
+          <input type="text" id="ubicacion" name="ubicacion" required>
+        </fieldset>
+        <fieldset>
+          <legend>Operador y transporte</legend>
+          <p>¿Con operador?</p>
+          <label for="con-op"><input type="radio" id="con-op" name="operador" value="con" checked> Con operador</label>
+          <label for="sin-op"><input type="radio" id="sin-op" name="operador" value="sin"> Sin operador</label>
+          <p>¿Requiere transporte con lowboy?</p>
+          <label for="tr-si"><input type="radio" id="tr-si" name="transporte" value="si"> Sí</label>
+          <label for="tr-no"><input type="radio" id="tr-no" name="transporte" value="no"> No</label>
+        </fieldset>
+        <fieldset>
+          <legend>Detalles</legend>
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" maxlength="500" placeholder="Describe brevemente el trabajo a realizar"></textarea>
+          <label for="acepto"><input type="checkbox" id="acepto" name="acepto" required> Acepto el tratamiento de mis datos para recibir la cotización.</label>
+        </fieldset>
+        <button class="boton" type="submit">Enviar solicitud</button>
+      </form>
+
+      <aside class="datos-contacto">
+        <h2>Datos de contacto</h2>
+        <p><b>Dirección:</b> Col. Escalón, San Salvador, El Salvador</p>
+        <p><b>Teléfono:</b> +503 2222-0000</p>
+        <p><b>WhatsApp:</b> +503 7000-0000</p>
+        <p><b>Correo:</b> cotizaciones@logictrans.example</p>
+        <table class="ficha">
+          <caption>Horario de atención</caption>
+          <thead><tr><th>Día</th><th>Horario</th></tr></thead>
+          <tbody>
+            <tr><td>Lunes a viernes</td><td>7:00 a. m.–5:00 p. m.</td></tr>
+            <tr><td>Sábado</td><td>7:00 a. m.–12:00 m.</td></tr>
+            <tr><td>Domingo</td><td>Cerrado</td></tr>
+          </tbody>
+        </table>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== QUÉ PASA DESPUÉS ===== -->
+  <section class="seccion seccion-clara">
+    <h2 class="titulo-seccion">¿Qué pasa después de enviar?</h2>
+    <ol class="pasos">
+      <li>Te respondemos en menos de 24 horas.</li>
+      <li>Visitamos o evaluamos tu obra para definir el equipo.</li>
+      <li>Te enviamos la propuesta de cotización.</li>
+    </ol>
+  </section>
+
+  <!-- ===== OTRAS VÍAS ===== -->
+  <section class="seccion">
+    <h2 class="titulo-seccion">Otras vías de contacto</h2>
+    <div class="dos-columnas">
+      <article class="tarjeta"><div class="tarjeta-texto"><h3>Llámanos</h3><p>+503 2222-0000<br>Atención directa en horario de oficina.</p></div></article>
+      <article class="tarjeta"><div class="tarjeta-texto"><h3>Escríbenos</h3><p>cotizaciones@logictrans.example<br>Adjunta planos o fotos de la obra si los tienes.</p></div></article>
+    </div>
+  </section>
+  </main>
+
+  <!-- ===== PIE DE PÁGINA (igual en las 4 páginas) ===== -->
+  <footer class="pie">
+    <div class="pie-contenido">
+      <div class="pie-bloque">
+        <h2>LogicTrans</h2>
+        <p>Col. Escalón, San Salvador, El Salvador<br>Tel. +503 2222-0000</p>
+        <p>Lunes a viernes 7:00 a. m.–5:00 p. m.<br>Sábado 7:00 a. m.–12:00 m.</p>
+      </div>
+      <div class="pie-bloque">
+        <h2>Enlaces rápidos</h2>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="flota.html">Flota</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="derechos">© 2026 LogicTrans. Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>

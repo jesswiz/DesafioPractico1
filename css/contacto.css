@@ -1,0 +1,79 @@
+/* ===== ENCABEZADO DE PÁGINA ===== */
+/* Imagen de fondo con background-size: cover (excepción permitida) */
+.banner-contacto {
+  background-image: url(../img/banner-contacto.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===== FORMULARIO + DATOS (dos columnas en escritorio) ===== */
+.contacto-fila {
+  display: flex;
+  gap: 40px;
+}
+
+.formulario {
+  flex-grow: 2;
+  flex-basis: 0;
+}
+
+.datos-contacto {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 24px;
+  background-color: #F1F5F9;
+  border-radius: 12px;
+}
+
+fieldset {
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+}
+
+legend {
+  padding: 0 8px;
+  font-weight: 700;
+  color: #1D4ED8;
+}
+
+/* Cada control ocupa todo el ancho de su columna */
+label {
+  display: flex;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 16px;
+  border: 1px solid #64748B;
+  border-radius: 8px;
+}
+
+/* Radios y casillas conservan su tamaño natural */
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto;
+}
+
+textarea {
+  height: 120px;
+}
+
+.nota {
+  color: #64748B;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .contacto-fila {
+    flex-direction: column;
+  }
+}

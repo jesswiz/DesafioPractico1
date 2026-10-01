@@ -1,0 +1,35 @@
+/* ===== ENCABEZADO DE PÁGINA ===== */
+/* Imagen de fondo con background-size: cover (excepción permitida) */
+.banner-nosotros {
+  background-image: url(../img/banner-nosotros.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===== PREGUNTAS FRECUENTES (lista de definición) ===== */
+.preguntas {
+  max-width: 800px;
+  margin: 20px auto 0 auto;
+}
+
+/* ::before marca cada pregunta con un símbolo */
+.preguntas dt {
+  font-weight: 700;
+  color: #1D4ED8;
+  margin-top: 16px;
+}
+
+.preguntas dt::before {
+  content: "? ";
+  color: #F59E0B;
+}
+
+.preguntas dd {
+  margin-left: 20px;
+}
+
+.dos-columnas img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
