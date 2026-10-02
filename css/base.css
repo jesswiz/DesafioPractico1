@@ -1,11 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Caacupe+One&family=Coiny&family=Grandstander:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Vai&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+/*Colores generales del sitio*/
+:root {
+  --fondo-oscuro: #0F172A;
+  --azul-principal: #1D4ED8;
+  --acento: #F59E0B;
+  --fondo-claro: #F1F5F9;
+  --blanco: #FFFFFF;
+  --texto: #1E293B;
+  --texto-secundario: #64748B;
+  --borde: #E2E8F0;
+  --capa-oscura: rgba(15, 23, 42, 0.65);
+}
 
-/* Fondo oscuro: #0F172A  Azul principal: #1D4ED8  Acento: #F59E0B
-   Fondo claro: #F1F5F9  Tarjetas: #FFFFFF  Texto: #1E293B
-   Texto secundario: #64748B  Borde suave: #E2E8F0
-   Capa sobre imágenes: rgba(15, 23, 42, 0.65) */
-
-/*Quita márgenes y rellenos por defecto y hace que el ancho incluya el relleno */
+/* Ajustes generales del modelo de caja (elimina margenes y rellenos por defecto)*/
 * {
   box-sizing: border-box;
   margin: 0;
@@ -39,7 +46,7 @@ p {
   margin-bottom: 14px;
 }
 
-/*ENCABEZADO Y MENÚ*/
+/*Distribucion, logo y navegacion de encabezado y menu*/
 .encabezado {
   display: flex;
   justify-content: space-between;
@@ -70,13 +77,13 @@ p {
   color: #F59E0B;
 }
 
-/* La página actual se ve distinta */
+/*Indica la página activa con color y subrayado*/
 .menu-principal a.activo {
   color: #F59E0B;
   border-bottom: 2px solid #F59E0B;
 }
 
-/* Botón destacado del menú */
+/*Estilo general de boton de cotizacion de cotizacion del menu */
 .menu-principal a.boton-menu {
   background-color: #F59E0B;
   color: #0F172A;
@@ -89,7 +96,7 @@ p {
   color: #0F172A;
 }
 
-/* botones*/
+/* Estilo general y efecto hover de los botones*/
 .boton {
   display: inline-flex;
   padding: 14px 28px;
@@ -124,7 +131,7 @@ p {
   color: #F59E0B;
 }
 
-/* secciones*/
+/* espacios y titulos de secciones*/
 .seccion {
   padding: 60px 40px;
   max-width: 1100px;
@@ -156,16 +163,16 @@ p {
 .texto-ancho {
   max-width: 800px;
   margin: 20px auto 0 auto;
+  text-align: center;
 }
 
-/* cuadricula de tarjetas*/
+/*columnas y separacion de cuadricula de tarjetas*/
 .cuadricula {
   max-width: 900px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin: 30px auto 0;
-  margin-top: 30px;
 }
 
 .dos-columnas {
@@ -178,7 +185,7 @@ p {
   flex-grow: 1;
   flex-basis: 0;
 }
-
+/*Borde, imagen y contenido de las tarjetas*/
 .tarjeta {
   background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
@@ -191,17 +198,20 @@ p {
   height: auto;
   border-radius: 12px 12px 0 0;
 }
-
+/*contenido centrado del texto de las tarjetas*/
 .tarjeta-texto {
   padding: 20px;
+  text-align: center;
 }
 
 .tarjeta ul {
   padding-left: 22px;
   margin-bottom: 14px;
+  text-align: left;
 }
 
-/* listas*/
+/* ancho, separacion y viñetas de listas*/
+/*lista de seguridad y calidad*/
 .razones,
 .pasos {
   max-width: 800px;
@@ -209,19 +219,23 @@ p {
   padding-left: 30px;
 }
 
+.razones {
+  max-width: 600px;
+}
+
 .razones li,
 .pasos li {
   margin-bottom: 10px;
 }
 
-/* ::marker cambia el color de las viñetas */
+/* Cambia el color de las viñetas con ::marker  y números de las listas */
 .razones li::marker,
 .pasos li::marker {
   color: #F59E0B;
   font-weight: 700;
 }
 
-/* tablas de datos*/
+/* tamaño, borde y celdas de tablas de datos*/
 .ficha {
   width: 100%;
   margin-top: 20px;
@@ -246,7 +260,7 @@ p {
   border: 1px solid #E2E8F0;
 }
 
-/* ENCABEZADO DE PÁGINA*/
+/* titulo y fondo de Encabezado*/
 .banner-pagina {
   background-size: cover;
   background-position: center;
@@ -265,7 +279,7 @@ p {
   margin-right: auto;
 }
 
-/* cierre*/
+/*llamado a la accion*/
 .cierre {
   background-color: #1D4ED8;
   color: #FFFFFF;
@@ -278,7 +292,7 @@ p {
   margin-bottom: 24px;
 }
 
-/*PIE DE PÁGINA*/
+/*footer*/
 .pie {
   background-color: #0F172A;
   color: #FFFFFF;
@@ -317,7 +331,7 @@ p {
   margin-bottom: 0;
 }
 
-/*MEJORAS ESTETICAS Y ANIMACIONES */
+/*sticky, hover, focus y transiciones*/
 .encabezado { 
   position: sticky; top: 0; z-index: 1000; 
 }
@@ -343,9 +357,8 @@ input:focus, select:focus, textarea:focus {
 @keyframes aparecer { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
 .menu-principal { justify-content:center; }
 
-/* DISEÑO ADAPTABLE */
+/* Diseño adaptable, pantallas de hasta 768px*/
 @media (max-width: 768px) {
-  /* Menú siempre horizontal y arriba*/
   .encabezado {
     flex-direction: column;
     gap: 10px;
@@ -390,7 +403,7 @@ input:focus, select:focus, textarea:focus {
     font-size: 13px;
   }
 }
-
+/* Diseño adaptable, pantallas de hasta 480px*/
 @media (max-width: 480px) {
   .cuadricula {
     grid-template-columns: 1fr;

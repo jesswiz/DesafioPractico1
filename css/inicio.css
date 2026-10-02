@@ -1,10 +1,11 @@
-/* Imagen de fondo: background-size: cover y background-position: center (excepción permitida) */
+/* Imagen de fondo background-size: cover y posicion background-position: center (excepción permitida) */
 .banner-inicio {
   background-image: url(../img/hero-inicio.png);
   background-size: cover;
   background-position: center;
 }
 
+/*espacio y alineacion del banner*/
 .banner-inicio .capa {
   padding: 200px;
   text-align: center;
@@ -16,6 +17,7 @@
   margin-right: auto;
 }
 
+/*distribucion y separacion de los botones*/
 .botones {
   display: flex;
   gap: 20px;
@@ -30,7 +32,7 @@
   max-width: 1100px;
 }
 
-/* ===== NÚMEROS ===== */
+/*distribuciones y estilo de estadisticas (numeros) */
 .numeros {
   display: flex;
   justify-content: space-around;
@@ -52,12 +54,12 @@
   color: #F59E0B;
 }
 
-/* ===== EQUIPOS DESTACADOS (4 tarjetas) ===== */
+/* 4 tarjetas por fila(equipos destacados)*/
 .cuadricula-4 {
   grid-template-columns: repeat(4, 1fr);
 }
 
-/* ===== SECTORES ===== */
+/*distribucion de los bloques*/
 .fila-sectores {
   display: flex;
   flex-wrap: wrap;
@@ -73,11 +75,13 @@
   border-radius: 12px;
 }
 
+/*espacio y borde superior de los testimonios*/
 .tarjeta-testimonio {
   padding: 24px;
   border-top: 4px solid #F59E0B;
 }
 
+/* Diseño adaptable, pantallas de hasta 768px*/
 @media (max-width: 768px) {
   .banner-inicio .capa {
     padding: 50px 16px;
@@ -96,7 +100,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
+/* Diseño adaptable, una columna de hasta 480px*/
 @media (max-width: 480px) {
   .cuadricula-4 {
     grid-template-columns: 1fr;

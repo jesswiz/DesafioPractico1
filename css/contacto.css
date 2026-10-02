@@ -1,12 +1,11 @@
-/* ===== ENCABEZADO DE PÁGINA ===== */
-/* Imagen de fondo con background-size: cover (excepción permitida) */
+/* Imagen de fondo y posicion con background-size: cover (excepción permitida) */
 .banner-contacto {
   background-image: url(../img/banner-contacto.jpg);
   background-size: cover;
   background-position: center;
 }
 
-/* ===== FORMULARIO + DATOS (dos columnas en escritorio) ===== */
+/*Formulario y datos (dos columnas en escritorio)*/
 .contacto-fila {
   display: flex;
   gap: 40px;
@@ -24,7 +23,7 @@
   background-color: #F1F5F9;
   border-radius: 12px;
 }
-
+/*Grupos del formulario:Fliedset y Legend*/
 fieldset {
   padding: 20px;
   margin-bottom: 20px;
@@ -38,7 +37,7 @@ legend {
   color: #1D4ED8;
 }
 
-/* Cada control ocupa todo el ancho de su columna */
+/* campos del formulario control y etiquetas */
 label {
   display: flex;
   margin-top: 12px;
@@ -71,7 +70,7 @@ textarea {
   color: #64748B;
   font-size: 14px;
 }
-
+/*Responsive, formulario en una columna hasta 768px*/
 @media (max-width: 768px) {
   .contacto-fila {
     flex-direction: column;

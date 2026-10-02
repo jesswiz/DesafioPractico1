@@ -38,11 +38,11 @@
           
           <legend>Datos de contacto</legend>
           <label for="nombre">Nombre completo</label>
-          <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="60">
+          <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="60" placeholder="Guillermo Calderón">
           <label for="empresa">Empresa</label>
-          <input type="text" id="empresa" name="empresa" required>
+          <input type="text" id="empresa" name="empresa" required placeholder="Nombre de tu empresa">
           <label for="correo">Correo electrónico</label>
-          <input type="email" id="correo" name="correo" required>
+          <input type="email" id="correo" name="correo" required placeholder="correo@empresa.com">
           <label for="telefono">Teléfono</label>
           <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{8}" placeholder="67676767">
           <span class="nota">8 dígitos, sin guiones ni código de país.</span>
@@ -55,13 +55,13 @@
             <option value="lowboy">Lowboy (cama baja)</option><option value="camion-cisterna">Camión cisterna</option><option value="camion-volteo">Camión volteo</option><option value="bulldozer">Bulldozer (tractor de orugas)</option><option value="excavadora">Excavadora</option><option value="retroexcavadora">Retroexcavadora</option><option value="montacargas">Montacargas (elevador de carga)</option><option value="motoniveladora">Motoniveladora</option><option value="rodillo-compactador">Rodillo compactador</option>
           </select>
           <label for="cantidad">Cantidad de equipos</label>
-          <input type="number" id="cantidad" name="cantidad" required min="1" max="20">
+          <input type="number" id="cantidad" name="cantidad" required min="1" max="20" placeholder="1">
           <label for="inicio">Fecha estimada de inicio</label>
           <input type="date" id="inicio" name="inicio" required>
           <label for="duracion">Duración estimada (días)</label>
-          <input type="number" id="duracion" name="duracion" required min="1" max="365">
+          <input type="number" id="duracion" name="duracion" required min="1" max="365" placeholder="30">
           <label for="ubicacion">Ubicación de la obra</label>
-          <input type="text" id="ubicacion" name="ubicacion" required>
+          <input type="text" id="ubicacion" name="ubicacion" required placeholder="Ej. Col. Santa Elena, Calle El Pedregal, Antiguo Cuscatlán">
         </fieldset>
         <fieldset>
           <legend>Operador y transporte</legend>
