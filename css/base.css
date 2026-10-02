@@ -12,7 +12,6 @@
   --capa-oscura: rgba(15, 23, 42, 0.65);
 }
 
-/* Ajustes generales del modelo de caja (elimina margenes y rellenos por defecto)*/
 * {
   box-sizing: border-box;
   margin: 0;
@@ -83,7 +82,7 @@ p {
   border-bottom: 2px solid var(--acento);
 }
 
-/*Estilo general de boton de cotizacion de cotizacion del menu */
+/*boton de cotizacion del menu */
 .menu-principal a.boton-menu {
   background-color: var(--acento);
   color: var(--fondo-oscuro);
@@ -96,7 +95,7 @@ p {
   color: #0F172A;
 }
 
-/* Estilo general y efecto hover de los botones*/
+/* Estilo y efecto de los botones*/
 .boton {
   display: inline-flex;
   padding: 14px 28px;
@@ -228,7 +227,7 @@ p {
   margin-bottom: 10px;
 }
 
-/* Cambia el color de las viñetas con ::marker  y números de las listas */
+/* Cambia el color de las viñetas */
 .razones li::marker,
 .pasos li::marker {
   color: var(--acento);
