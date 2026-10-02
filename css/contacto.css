@@ -1,3 +1,15 @@
+:root {
+  --fondo-oscuro: #0F172A;
+  --azul-principal: #1D4ED8;
+  --acento: #F59E0B;
+  --fondo-claro: #F1F5F9;
+  --blanco: #FFFFFF;
+  --texto: #1E293B;
+  --texto-secundario: #64748B;
+  --borde: #E2E8F0;
+  --capa-oscura: rgba(15, 23, 42, 0.65);
+}
+
 /* Imagen de fondo y posicion con background-size: cover (excepción permitida) */
 .banner-contacto {
   background-image: url(../img/banner-contacto.jpg);
@@ -20,21 +32,21 @@
   flex-grow: 1;
   flex-basis: 0;
   padding: 24px;
-  background-color: #F1F5F9;
+  background-color: var(--fondo-claro);
   border-radius: 12px;
 }
 /*Grupos del formulario:Fliedset y Legend*/
 fieldset {
   padding: 20px;
   margin-bottom: 20px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--borde);
   border-radius: 12px;
 }
 
 legend {
   padding: 0 8px;
   font-weight: 700;
-  color: #1D4ED8;
+  color: var(--azul-principal);
 }
 
 /* campos del formulario control y etiquetas */
@@ -52,7 +64,7 @@ textarea {
   padding: 10px;
   font-family: 'Sansation', Arial, sans-serif;
   font-size: 16px;
-  border: 1px solid #64748B;
+  border: 1px solid var(--texto-secundario);
   border-radius: 8px;
 }
 
@@ -67,7 +79,7 @@ textarea {
 }
 
 .nota {
-  color: #64748B;
+  color: var(--texto-secundario);
   font-size: 14px;
 }
 /*Responsive, formulario en una columna hasta 768px*/

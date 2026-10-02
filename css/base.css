@@ -22,8 +22,8 @@
 body {
   font-family: 'Sansation', Arial, sans-serif;
   font-size: 16px;
-  color: #1E293B;
-  background-color: #FFFFFF;
+  color: var(--texto);
+  background-color: var(--blanco);
 }
 
 h1 {
@@ -52,7 +52,7 @@ p {
   justify-content: space-between;
   align-items: center;
   padding: 14px 40px;
-  background-color: #0F172A;
+  background-color: var(--fondo-oscuro);
 }
 
 .logo {
@@ -68,31 +68,31 @@ p {
 }
 
 .menu-principal a {
-  color: #FFFFFF;
+  color: var(--blanco);
   text-decoration: none;
   font-weight: 700;
 }
 
 .menu-principal a:hover {
-  color: #F59E0B;
+  color: var(--acento);
 }
 
 /*Indica la página activa con color y subrayado*/
 .menu-principal a.activo {
-  color: #F59E0B;
-  border-bottom: 2px solid #F59E0B;
+  color: var(--acento);
+  border-bottom: 2px solid var(--acento);
 }
 
 /*Estilo general de boton de cotizacion de cotizacion del menu */
 .menu-principal a.boton-menu {
-  background-color: #F59E0B;
-  color: #0F172A;
+  background-color: var(--acento);
+  color: var(--fondo-oscuro);
   padding: 10px 18px;
   border-radius: 8px;
 }
 
 .menu-principal a.boton-menu:hover {
-  background-color: #FFFFFF;
+  background-color: var(--blanco);
   color: #0F172A;
 }
 
@@ -101,7 +101,7 @@ p {
   display: inline-flex;
   padding: 14px 28px;
   background-color: #F59E0B;
-  color: #0F172A;
+  color: var(--fondo-oscuro);
   font-family: 'Sansation', Arial, sans-serif;
   font-size: 16px;
   font-weight: 700;
@@ -111,24 +111,24 @@ p {
 }
 
 .boton:hover {
-  background-color: #FFFFFF;
+  background-color: var(--blanco);
 }
 
 .boton-claro {
-  background-color: #FFFFFF;
+  background-color: var(--blanco);
 }
 
 .boton-claro:hover {
-  background-color: #F59E0B;
+  background-color: var(--acento);
 }
 
 .enlace {
-  color: #1D4ED8;
+  color: var(--azul-principal);
   font-weight: 700;
 }
 
 .enlace:hover {
-  color: #F59E0B;
+  color: var(--acento);
 }
 
 /* espacios y titulos de secciones*/
@@ -140,13 +140,13 @@ p {
 
 .seccion-clara {
   max-width: none;
-  background-color: #F1F5F9;
+  background-color: var(--fondo-claro);
 }
 
 .seccion-oscura {
   max-width: none;
-  background-color: #0F172A;
-  color: #FFFFFF;
+  background-color: var(--fondo-oscuro);
+  color: var(--blanco);
 }
 
 .titulo-seccion {
@@ -156,7 +156,7 @@ p {
 
 .subtitulo {
   text-align: center;
-  color: #64748B;
+  color: var(--texto-secundario);
   margin-bottom: 30px;
 }
 
@@ -187,8 +187,8 @@ p {
 }
 /*Borde, imagen y contenido de las tarjetas*/
 .tarjeta {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background-color: var(--blanco);
+  border: 1px solid var(--borde);
   border-radius: 12px;
 }
 
@@ -231,7 +231,7 @@ p {
 /* Cambia el color de las viñetas con ::marker  y números de las listas */
 .razones li::marker,
 .pasos li::marker {
-  color: #F59E0B;
+  color: var(--acento);
   font-weight: 700;
 }
 
@@ -239,8 +239,8 @@ p {
 .ficha {
   width: 100%;
   margin-top: 20px;
-  border: 1px solid #E2E8F0;
-  background-color: #FFFFFF;
+  border: 1px solid var(--borde);
+  background-color: var(--blanco);
 }
 
 .ficha caption {
@@ -249,15 +249,15 @@ p {
 }
 
 .ficha th {
-  background-color: #1D4ED8;
-  color: #FFFFFF;
+  background-color: var(--azul-principal);
+  color: var(--blanco);
   text-align: left;
 }
 
 .ficha th,
 .ficha td {
   padding: 12px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--borde);
 }
 
 /* titulo y fondo de Encabezado*/
@@ -267,8 +267,8 @@ p {
 }
 
 .capa {
-  background-color: rgba(15, 23, 42, 0.65);
-  color: #FFFFFF;
+  background-color: var(--capa-oscura);
+  color: var(--blanco);
   padding: 70px 40px;
 }
 
@@ -281,8 +281,8 @@ p {
 
 /*llamado a la accion*/
 .cierre {
-  background-color: #1D4ED8;
-  color: #FFFFFF;
+  background-color: var(--azul-principal);
+  color: var(--blanco);
   text-align: center;
   padding: 60px 40px;
 }
@@ -294,8 +294,8 @@ p {
 
 /*footer*/
 .pie {
-  background-color: #0F172A;
-  color: #FFFFFF;
+  background-color: var(--fondo-oscuro);
+  color: var(--blanco);
   padding: 40px;
 }
 
@@ -317,16 +317,16 @@ p {
 }
 
 .pie a {
-  color: #FFFFFF;
+  color: var(--blanco);
 }
 
 .pie a:hover {
-  color: #F59E0B;
+  color: var(--acento);
 }
 
 .derechos {
   text-align: center;
-  color: #64748B;
+  color: var(--texto-secundario);
   margin-top: 24px;
   margin-bottom: 0;
 }
@@ -352,7 +352,7 @@ a, .boton, .tarjeta, input, select, textarea {
   transform: scale(1.05); 
 }
 input:focus, select:focus, textarea:focus { 
-  outline:none; border-color:#1D4ED8; box-shadow:0 0 8px rgba(29,78,216,.25); 
+  outline:none; border-color: var(--azul-principal); box-shadow:0 0 8px var(--capa-oscura); 
 }
 @keyframes aparecer { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
 .menu-principal { justify-content:center; }
