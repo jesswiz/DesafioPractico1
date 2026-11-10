@@ -14,7 +14,9 @@ import {
   deleteDoc,
   query,
   where,
-  serverTimestamp
+  serverTimestamp,
+  writeBatch,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 // Estados posibles de una solicitud, en el orden en que avanzan
@@ -120,4 +122,30 @@ export async function actualizarEstadoSolicitud(id, estado) {
 // El cliente cancela una solicitud pendiente: se elimina el documento
 export async function cancelarSolicitud(id) {
   await deleteDoc(doc(db, "solicitudes", id));
+}
+
+/* ---------- DATOS INICIALES ---------- */
+
+// Guarda en un solo lote los equipos y las solicitudes de ejemplo (ver semilla.js).
+// - Cada equipo trae su propio id (por ejemplo "excavadora") para que las
+//   solicitudes puedan apuntar a él con equipoId.
+// - creadoEn llega como texto "AAAA-MM-DDTHH:MM" y se convierte a Timestamp.
+// Un lote (writeBatch) es "todo o nada": si una escritura falla, no se guarda ninguna.
+export async function guardarDatosIniciales(equipos, solicitudes) {
+  const lote = writeBatch(db);
+
+  equipos.forEach((equipo) => {
+    const { id, ...datosEquipo } = equipo; // separa el id del resto de los datos
+    lote.set(doc(db, "equipos", id), datosEquipo);
+  });
+
+  solicitudes.forEach((solicitud) => {
+    const referencia = doc(collection(db, "solicitudes")); // id automático
+    lote.set(referencia, {
+      ...solicitud,
+      creadoEn: Timestamp.fromDate(new Date(solicitud.creadoEn))
+    });
+  });
+
+  await lote.commit();
 }
