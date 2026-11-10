@@ -1,0 +1,132 @@
+rules_version = '2';
+
+// Reglas de seguridad de Cloud Firestore para LogicTrans.
+// Se publican en: Consola de Firebase > Firestore Database > Reglas.
+// Todo lo que no se permite aquí de forma explícita queda PROHIBIDO.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ---------- FUNCIONES DE AYUDA ---------- */
+
+    // ¿Hay un usuario con sesión iniciada?
+    function conSesion() {
+      return request.auth != null;
+    }
+
+    // Ruta del documento de un usuario en la colección "usuarios"
+    function rutaUsuario(uid) {
+      return /databases/$(database)/documents/usuarios/$(uid);
+    }
+
+    // ¿El usuario actual es administrador?
+    // Se lee su documento usuarios/{uid}; el rol "admin" solo se pone a mano en la consola.
+    function esAdmin() {
+      return conSesion()
+        && exists(rutaUsuario(request.auth.uid))
+        && get(rutaUsuario(request.auth.uid)).data.rol == "admin";
+    }
+
+    // Estados válidos de una solicitud
+    function estadoValido(estado) {
+      return estado in ["pendiente", "en evaluación", "aprobada", "rechazada"];
+    }
+
+    // Un equipo debe tener exactamente estos campos y con datos válidos
+    function equipoValido() {
+      let e = request.resource.data;
+      let campos = ["nombre", "categoria", "descripcion", "capacidad", "usos", "imagen", "disponible"];
+      return e.keys().hasAll(campos) && e.keys().hasOnly(campos)
+        && e.nombre is string && e.nombre.size() >= 3 && e.nombre.size() <= 60
+        && e.categoria is string && e.categoria.size() >= 3 && e.categoria.size() <= 40
+        && e.descripcion is string && e.descripcion.size() >= 10 && e.descripcion.size() <= 300
+        && e.capacidad is string && e.capacidad.size() >= 2 && e.capacidad.size() <= 60
+        && e.usos is list && e.usos.size() >= 1 && e.usos.size() <= 8
+        && e.imagen is string && e.imagen.size() <= 300
+        && e.disponible is bool;
+    }
+
+    // Solicitud nueva creada por un cliente desde contacto.html
+    function solicitudValidaDeCliente() {
+      let s = request.resource.data;
+      let campos = ["uid", "nombre", "empresa", "correo", "telefono", "equipoId", "equipoNombre",
+                    "cantidad", "inicio", "duracion", "ubicacion", "conOperador", "transporte",
+                    "mensaje", "estado", "creadoEn"];
+      let rutaEquipo = /databases/$(database)/documents/equipos/$(s.equipoId);
+      return s.keys().hasAll(campos) && s.keys().hasOnly(campos)
+        // Es suya, empieza pendiente y la fecha la pone el servidor
+        && s.uid == request.auth.uid
+        && s.estado == "pendiente"
+        && s.creadoEn == request.time
+        // Datos del cliente
+        && s.nombre is string && s.nombre.size() >= 3 && s.nombre.size() <= 60
+        && s.empresa is string && s.empresa.size() >= 2 && s.empresa.size() <= 80
+        && s.correo is string && s.correo.matches('^[^@ ]+@[^@ ]+[.][^@ ]+$')
+        && s.telefono is string && s.telefono.matches('^[0-9]{8}$')
+        // Datos del servicio
+        && s.cantidad is int && s.cantidad >= 1 && s.cantidad <= 20
+        && s.inicio is string && s.inicio.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && s.duracion is int && s.duracion >= 1 && s.duracion <= 365
+        && s.ubicacion is string && s.ubicacion.size() >= 5 && s.ubicacion.size() <= 150
+        && s.conOperador is bool && s.transporte is bool
+        && s.mensaje is string && s.mensaje.size() <= 500
+        // El equipo existe, está disponible y el nombre guardado coincide
+        && exists(rutaEquipo)
+        && get(rutaEquipo).data.disponible == true
+        && s.equipoNombre == get(rutaEquipo).data.nombre;
+    }
+
+    /* ---------- USUARIOS ---------- */
+
+    match /usuarios/{uid} {
+      // Cada quien lee su propio documento; el administrador puede leer todos
+      allow read: if conSesion() && (request.auth.uid == uid || esAdmin());
+
+      // Al registrarse, el usuario crea SU documento y SOLO con rol "cliente"
+      allow create: if conSesion()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(["nombre", "correo", "rol", "creadoEn"])
+        && request.resource.data.rol == "cliente"
+        && request.resource.data.correo == request.auth.token.email
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() >= 3 && request.resource.data.nombre.size() <= 60
+        && request.resource.data.creadoEn == request.time;
+
+      // Nadie lo modifica ni lo borra desde la aplicación (el rol se cambia en la consola)
+      allow update, delete: if false;
+    }
+
+    /* ---------- EQUIPOS ---------- */
+
+    match /equipos/{equipoId} {
+      // Catálogo público: cualquiera puede verlo, incluso sin sesión
+      allow read: if true;
+
+      // Solo el administrador crea, edita o elimina equipos
+      allow create, update: if esAdmin() && equipoValido();
+      allow delete: if esAdmin();
+    }
+
+    /* ---------- SOLICITUDES ---------- */
+
+    match /solicitudes/{solicitudId} {
+      // El cliente lee solo las suyas; el administrador lee todas
+      allow read: if conSesion() && (resource.data.uid == request.auth.uid || esAdmin());
+
+      // El cliente crea solicitudes propias y válidas.
+      // El administrador también puede crear (para cargar las solicitudes de ejemplo).
+      allow create: if (conSesion() && solicitudValidaDeCliente())
+        || (esAdmin() && estadoValido(request.resource.data.estado));
+
+      // Solo el administrador actualiza, y solo puede cambiar el campo "estado"
+      allow update: if esAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["estado"])
+        && estadoValido(request.resource.data.estado);
+
+      // El cliente cancela (borra) solo sus solicitudes que siguen pendientes
+      allow delete: if conSesion()
+        && resource.data.uid == request.auth.uid
+        && resource.data.estado == "pendiente";
+    }
+  }
+}

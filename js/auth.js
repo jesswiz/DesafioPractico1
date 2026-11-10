@@ -17,8 +17,10 @@ export async function registrarUsuario(nombre, correo, contrasena) {
   const usuario = credencial.user;
   // Guarda el nombre en el perfil de Authentication
   await updateProfile(usuario, { displayName: nombre });
-  // Guarda el documento usuarios/{uid}
-  await crearUsuario(usuario.uid, nombre, correo);
+  // Guarda el documento usuarios/{uid}.
+  // Se usa usuario.email (como lo guardó Firebase) porque las reglas exigen
+  // que coincida exactamente con el correo de la sesión.
+  await crearUsuario(usuario.uid, nombre, usuario.email);
   return usuario;
 }
 
