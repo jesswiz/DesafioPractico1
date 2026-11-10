@@ -80,10 +80,131 @@
   margin-top: 0;
 }
 
+/* Botón secundario (borde azul, fondo blanco) */
+.boton-secundario {
+  padding: 10px 18px;
+  background-color: var(--blanco);
+  color: var(--azul-principal);
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid var(--azul-principal);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton-secundario:hover {
+  background-color: var(--azul-principal);
+  color: var(--blanco);
+}
+
+/* Mensajes dentro de una sección: mismo ancho que la cuadrícula */
+.seccion > .mensaje {
+  max-width: 900px;
+  margin: 20px auto 0;
+}
+
+/* Barra de filtros del catálogo (flota.html) */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  max-width: 900px;
+  margin: 24px auto 0;
+  padding: 20px;
+  background-color: var(--fondo-claro);
+  border-radius: 12px;
+}
+
+.filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 170px;
+}
+
+.filtro label,
+.filtro-check {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.filtros input[type="search"],
+.filtros select {
+  width: 100%;
+  padding: 10px;
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 16px;
+  background-color: var(--blanco);
+  border: 1px solid var(--texto-secundario);
+  border-radius: 8px;
+}
+
+.filtro-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+/* Texto "Mostrando X de Y equipos" */
+.contador {
+  max-width: 900px;
+  margin: 16px auto 0;
+  color: var(--texto-secundario);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Tarjetas del catálogo: todas las imágenes con la misma proporción */
+#lista-equipos .tarjeta img {
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+}
+
+/* Etiqueta de categoría encima del nombre del equipo */
+.etiqueta-categoria {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--azul-principal);
+  background-color: #EFF6FF;
+  border-radius: 999px;
+}
+
+/* Disponibilidad del equipo */
+.disponibilidad {
+  display: block;
+  width: fit-content; /* el fondo solo ocupa el ancho del texto */
+  margin: 0 auto 14px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.disponible {
+  color: #065F46;
+  background-color: #ECFDF5;
+}
+
+.no-disponible {
+  color: #991B1B;
+  background-color: #FEF2F2;
+}
+
 /* Diseño adaptable, pantallas de hasta 768px */
 @media (max-width: 768px) {
   /* En una columna, los formularios ocupan todo el ancho */
   .acceso {
     align-items: stretch;
+  }
+
+  .filtros {
+    padding: 16px;
   }
 }

@@ -50,6 +50,15 @@ export function claseEstado(estado) {
   return "estado-" + sinTildes.replace(/\s+/g, "-");
 }
 
+// Pasa un texto a minúsculas y sin tildes para comparar en búsquedas.
+// Así "Camión" y "camion" se consideran iguales.
+export function normalizarTexto(texto) {
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+}
+
 // Formatea una fecha "AAAA-MM-DD" como "DD/MM/AAAA"
 export function formatearFecha(textoFecha) {
   if (!textoFecha) {
