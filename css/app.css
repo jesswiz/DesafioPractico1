@@ -197,8 +197,172 @@
   background-color: #FEF2F2;
 }
 
+/* Encabezado de los paneles (panel.html y admin.html) */
+.encabezado-panel {
+  padding: 50px 40px;
+  background-color: var(--fondo-oscuro);
+  color: var(--blanco);
+  text-align: center;
+}
+
+.encabezado-panel p {
+  margin: 12px auto 0;
+  max-width: 700px;
+  color: #CBD5E1;
+}
+
+/* Colores de cada estado de solicitud.
+   Cada clase define dos variables que usan las etiquetas y los indicadores. */
+.estado-pendiente {
+  --color-estado: #B45309;
+  --fondo-estado: #FEF3C7;
+}
+
+.estado-en-evaluacion {
+  --color-estado: #1D4ED8;
+  --fondo-estado: #DBEAFE;
+}
+
+.estado-aprobada {
+  --color-estado: #047857;
+  --fondo-estado: #D1FAE5;
+}
+
+.estado-rechazada {
+  --color-estado: #B91C1C;
+  --fondo-estado: #FEE2E2;
+}
+
+/* Etiqueta de estado (por ejemplo "pendiente") */
+.estado {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-estado);
+  background-color: var(--fondo-estado);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Solo la primera letra en mayúscula: "En evaluación" */
+.estado::first-letter {
+  text-transform: uppercase;
+}
+
+/* Grupos del formulario desactivados (por ejemplo, sin sesión) */
+fieldset:disabled {
+  opacity: 0.6;
+}
+
+/* Indicadores (resumen con números) */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  max-width: 900px;
+  margin: 24px auto 0;
+}
+
+.indicador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 12px;
+  text-align: center;
+  background-color: var(--blanco);
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--color-estado, var(--azul-principal));
+  border-radius: 12px;
+}
+
+.indicador-numero {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-estado, var(--azul-principal));
+}
+
+/* Lista de solicitudes del cliente */
+.lista-solicitudes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 24px auto 0;
+}
+
+.solicitud {
+  padding: 20px;
+  background-color: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.solicitud-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.solicitud-cabecera h3 {
+  margin-bottom: 0;
+}
+
+/* Datos de la solicitud en dos columnas: etiqueta | valor */
+.solicitud-datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  font-size: 15px;
+}
+
+.solicitud-datos dt {
+  font-weight: 700;
+  color: var(--texto-secundario);
+}
+
+.solicitud-mensaje {
+  margin: 12px 0 0;
+  font-style: italic;
+  color: var(--texto-secundario);
+}
+
+/* Botón para acciones que borran o cancelan */
+.boton-peligro {
+  margin-top: 16px;
+  padding: 8px 16px;
+  background-color: var(--blanco);
+  color: #B91C1C;
+  font-family: 'Sansation', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid #B91C1C;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton-peligro:hover {
+  background-color: #B91C1C;
+  color: var(--blanco);
+}
+
+.boton-peligro:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Diseño adaptable, pantallas de hasta 768px */
 @media (max-width: 768px) {
+  .encabezado-panel {
+    padding: 36px 16px;
+  }
+
+  .lista-solicitudes {
+    grid-template-columns: 1fr;
+  }
+
   /* En una columna, los formularios ocupan todo el ancho */
   .acceso {
     align-items: stretch;

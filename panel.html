@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Panel del cliente de LogicTrans: consulta el estado de tus solicitudes de cotización.">
+  <title>Mi panel | LogicTrans</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="encabezado">
+    <a href="index.html"><img class="logo" src="img/logo-logictrans.svg" alt="Logo de LogicTrans" width="200" height="50"></a>
+    <nav>
+      <ul class="menu-principal">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="flota.html">Flota</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li class="menu-sesion" id="menu-sesion"><a href="login.html">Ingresar</a></li>
+      <li><a class="boton-menu" href="contacto.html">Solicitar cotización</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+  <section class="encabezado-panel">
+    <h1>Mi panel</h1>
+    <p id="saludo">Revisa el estado de tus solicitudes de cotización.</p>
+  </section>
+
+  <section class="seccion">
+    <h2 class="titulo-seccion">Resumen de mis solicitudes</h2>
+    <!-- panel.js cuenta las solicitudes por estado y llena estos números -->
+    <div class="indicadores" id="resumen">
+      <div class="indicador"><span class="indicador-numero" data-estado="total">0</span><span>Total</span></div>
+      <div class="indicador estado-pendiente"><span class="indicador-numero" data-estado="pendiente">0</span><span>Pendientes</span></div>
+      <div class="indicador estado-en-evaluacion"><span class="indicador-numero" data-estado="en evaluación">0</span><span>En evaluación</span></div>
+      <div class="indicador estado-aprobada"><span class="indicador-numero" data-estado="aprobada">0</span><span>Aprobadas</span></div>
+      <div class="indicador estado-rechazada"><span class="indicador-numero" data-estado="rechazada">0</span><span>Rechazadas</span></div>
+    </div>
+  </section>
+
+  <section class="seccion seccion-clara">
+    <h2 class="titulo-seccion">Mis solicitudes</h2>
+
+    <form class="filtros" id="filtros-panel" aria-label="Filtrar solicitudes">
+      <div class="filtro">
+        <label for="filtro-estado">Estado</label>
+        <select id="filtro-estado" name="estado">
+          <option value="">Todos</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="en evaluación">En evaluación</option>
+          <option value="aprobada">Aprobada</option>
+          <option value="rechazada">Rechazada</option>
+        </select>
+      </div>
+      <a class="boton" href="contacto.html">Nueva solicitud</a>
+    </form>
+
+    <p id="mensaje-panel" class="mensaje" role="status" aria-live="polite" hidden></p>
+
+    <!-- Las solicitudes se generan con JavaScript (js/panel.js) -->
+    <div class="lista-solicitudes" id="lista-solicitudes"></div>
+  </section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-contenido">
+      <div class="pie-bloque">
+        <h2>LogicTrans</h2>
+        <p>Col. Escalón, San Salvador, El Salvador<br>Tel. +503 2222-0000</p>
+        <p>Lunes a viernes 7:00 a. m.–5:00 p. m.<br>Sábado 7:00 a. m.–12:00 m.</p>
+      </div>
+      <div class="pie-bloque">
+        <h2>Enlaces rápidos</h2>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="flota.html">Flota</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="derechos">© 2026 LogicTrans. Todos los derechos reservados.</p>
+  </footer>
+
+  <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/panel.js"></script>
+</body>
+</html>

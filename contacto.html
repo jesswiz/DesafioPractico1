@@ -35,7 +35,12 @@
   <section class="seccion">
     <div class="contacto-fila">
 
-      <form class="formulario" action="#" method="get">
+      <!-- contacto.js valida este formulario y guarda la solicitud en Firestore -->
+      <form class="formulario" id="form-solicitud" novalidate>
+        <div id="aviso-sesion" class="mensaje mensaje-info" hidden>
+          Para solicitar una cotización necesitas una cuenta.
+          <a class="enlace" href="login.html?volver=contacto.html">Inicia sesión o regístrate</a>.
+        </div>
         <fieldset>
           
           <legend>Datos de contacto</legend>
@@ -53,13 +58,14 @@
           <legend>Datos del servicio</legend>
           <label for="equipo">Tipo de equipo</label>
           <select id="equipo" name="equipo" required>
-            <option value="">Selecciona un equipo</option>
-            <option value="lowboy">Lowboy (cama baja)</option><option value="camion-cisterna">Camión cisterna</option><option value="camion-volteo">Camión volteo</option><option value="bulldozer">Bulldozer (tractor de orugas)</option><option value="excavadora">Excavadora</option><option value="retroexcavadora">Retroexcavadora</option><option value="montacargas">Montacargas (elevador de carga)</option><option value="motoniveladora">Motoniveladora</option><option value="rodillo-compactador">Rodillo compactador</option>
+            <!-- Las opciones se cargan desde la colección "equipos" (solo los disponibles) -->
+            <option value="">Cargando equipos...</option>
           </select>
           <label for="cantidad">Cantidad de equipos</label>
           <input type="number" id="cantidad" name="cantidad" required min="1" max="20" placeholder="1">
           <label for="inicio">Fecha estimada de inicio</label>
-          <input type="date" id="inicio" name="inicio" required>
+          <input type="date" id="inicio" name="inicio" required aria-describedby="nota-inicio">
+          <span class="nota" id="nota-inicio">No puede ser una fecha pasada.</span>
           <label for="duracion">Duración estimada (días)</label>
           <input type="number" id="duracion" name="duracion" required min="1" max="365" placeholder="30">
           <label for="ubicacion">Ubicación de la obra</label>
@@ -80,6 +86,7 @@
           <textarea id="mensaje" name="mensaje" maxlength="500" placeholder="Describe brevemente el trabajo a realizar"></textarea>
           <label for="acepto"><input type="checkbox" id="acepto" name="acepto" required> Acepto el tratamiento de mis datos para recibir la cotización.</label>
         </fieldset>
+        <p id="mensaje-solicitud" class="mensaje" role="status" aria-live="polite" hidden></p>
         <button class="boton" type="submit">Enviar solicitud</button>
       </form>
 
@@ -141,5 +148,6 @@
   </footer>
 
   <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/contacto.js"></script>
 </body>
 </html>
