@@ -258,7 +258,8 @@ fieldset:disabled {
 /* Indicadores (resumen con números) */
 .indicadores {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  /* Tantas columnas como quepan (mínimo 120px cada una): 5 en tableta y escritorio, 2 en teléfono */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 16px;
   max-width: 900px;
   margin: 24px auto 0;
@@ -503,5 +504,92 @@ fieldset:disabled {
 
   .filtros {
     padding: 16px;
+  }
+
+  /* Tablas del administrador como tarjetas: cada fila es una tarjeta
+     y cada dato muestra antes el nombre de su columna (data-etiqueta). */
+  .tabla-admin,
+  .tabla-admin tbody,
+  .tabla-admin tr,
+  .tabla-admin td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-admin {
+    border: none;
+    background-color: transparent;
+  }
+
+  .tabla-admin caption {
+    display: block;
+  }
+
+  /* Los títulos de columna se ocultan porque cada dato lleva su etiqueta */
+  .tabla-admin thead {
+    display: none;
+  }
+
+  .tabla-admin tr,
+  .tabla-admin tbody tr:nth-child(even) {
+    margin-bottom: 16px;
+    padding: 8px 0;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+  }
+
+  .tabla-admin td {
+    padding: 6px 16px;
+    font-size: 14px;
+    border: none;
+  }
+
+  .tabla-admin td::before {
+    content: attr(data-etiqueta);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--texto-secundario);
+  }
+
+  .tabla-admin .selector-estado {
+    width: 100%;
+  }
+}
+
+/* Teléfonos pequeños (hasta 480px): la tabla de ficha técnica de flota.html
+   permite partir palabras largas para no salirse de la pantalla */
+@media (max-width: 480px) {
+  .ficha th,
+  .ficha td {
+    padding: 5px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Foco visible al navegar con el teclado (Tab) */
+a:focus-visible,
+button:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 3px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* Si el usuario pidió reducir el movimiento en su sistema, se quitan animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .tarjeta:hover,
+  .boton:hover {
+    transform: none;
   }
 }

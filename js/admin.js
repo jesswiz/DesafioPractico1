@@ -171,9 +171,12 @@ function filtrarSolicitudes() {
   return ordenarRecientesPrimero(filtradas);
 }
 
-// Crea una celda <td> con el contenido indicado y la agrega a la fila
-function agregarCelda(fila, ...contenidoCelda) {
+// Crea una celda <td> con el contenido indicado y la agrega a la fila.
+// "etiqueta" es el nombre de la columna: en móvil la tabla se muestra como
+// tarjetas y el CSS escribe esa etiqueta antes de cada dato (data-etiqueta).
+function agregarCelda(fila, etiqueta, ...contenidoCelda) {
   const celda = document.createElement("td");
+  celda.dataset.etiqueta = etiqueta;
   celda.append(...contenidoCelda);
   fila.append(celda);
   return celda;
@@ -183,27 +186,27 @@ function agregarCelda(fila, ...contenidoCelda) {
 function crearFilaSolicitud(solicitud) {
   const fila = document.createElement("tr");
 
-  agregarCelda(fila, formatearMarcaTiempo(solicitud.creadoEn));
+  agregarCelda(fila, "Enviada", formatearMarcaTiempo(solicitud.creadoEn));
 
-  agregarCelda(fila,
+  agregarCelda(fila, "Cliente",
     crearElemento("b", "", solicitud.nombre),
     document.createElement("br"),
     solicitud.empresa,
     crearElemento("small", "dato-secundario", solicitud.correo + " · " + solicitud.telefono)
   );
 
-  agregarCelda(fila, solicitud.equipoNombre + " × " + solicitud.cantidad);
+  agregarCelda(fila, "Equipo", solicitud.equipoNombre + " × " + solicitud.cantidad);
 
-  agregarCelda(fila,
+  agregarCelda(fila, "Inicio",
     formatearFecha(solicitud.inicio),
     crearElemento("small", "dato-secundario", solicitud.duracion + (solicitud.duracion === 1 ? " día" : " días"))
   );
 
-  agregarCelda(fila, solicitud.ubicacion);
+  agregarCelda(fila, "Ubicación", solicitud.ubicacion);
 
   const detalles = (solicitud.conOperador ? "Con operador" : "Sin operador") +
     (solicitud.transporte ? ", con lowboy" : ", sin transporte");
-  const celdaDetalles = agregarCelda(fila, detalles);
+  const celdaDetalles = agregarCelda(fila, "Detalles", detalles);
   if (solicitud.mensaje) {
     celdaDetalles.append(crearElemento("small", "dato-secundario", "“" + solicitud.mensaje + "”"));
   }
@@ -219,7 +222,7 @@ function crearFilaSolicitud(solicitud) {
   });
   selectEstado.value = solicitud.estado;
   selectEstado.addEventListener("change", () => cambiarEstado(solicitud, selectEstado));
-  agregarCelda(fila, selectEstado);
+  agregarCelda(fila, "Estado", selectEstado);
 
   return fila;
 }
@@ -305,13 +308,13 @@ function llenarCategorias() {
 function crearFilaEquipo(equipo) {
   const fila = document.createElement("tr");
 
-  agregarCelda(fila, crearElemento("b", "", equipo.nombre));
-  agregarCelda(fila, equipo.categoria);
-  agregarCelda(fila, equipo.capacidad);
-  agregarCelda(fila, crearElemento("span",
+  agregarCelda(fila, "Nombre", crearElemento("b", "", equipo.nombre));
+  agregarCelda(fila, "Categoría", equipo.categoria);
+  agregarCelda(fila, "Capacidad", equipo.capacidad);
+  agregarCelda(fila, "Disponible", crearElemento("span",
     "disponibilidad " + (equipo.disponible ? "disponible" : "no-disponible"),
     equipo.disponible ? "Sí" : "No"));
-  agregarCelda(fila, String(contarSolicitudesDeEquipo(equipo.id)));
+  agregarCelda(fila, "Solicitudes", String(contarSolicitudesDeEquipo(equipo.id)));
 
   const botonEditar = crearElemento("button", "boton-secundario boton-pequeno", "Editar");
   botonEditar.type = "button";
@@ -325,7 +328,7 @@ function crearFilaEquipo(equipo) {
 
   const acciones = crearElemento("div", "acciones");
   acciones.append(botonEditar, botonEliminar);
-  agregarCelda(fila, acciones);
+  agregarCelda(fila, "Acciones", acciones);
 
   return fila;
 }
