@@ -3,7 +3,8 @@
 // estado, un filtro por estado y permite cancelar las que siguen pendientes.
 
 import { obtenerSesion } from "./auth.js";
-import { obtenerSolicitudesDeUsuario, cancelarSolicitud, ESTADOS } from "./datos.js";
+import { obtenerSolicitudesDeUsuario, cancelarSolicitud } from "./datos.js";
+import { contarPorEstado, ordenarRecientesPrimero } from "./procesamiento.js";
 import {
   mostrarMensaje, ocultarMensaje, crearElemento, claseEstado,
   formatearFecha, formatearMarcaTiempo
@@ -19,28 +20,6 @@ const lista = document.querySelector("#lista-solicitudes");
 
 // Solicitudes del cliente leídas de Firestore
 let solicitudes = [];
-
-/* ---------- PROCESAMIENTO ---------- */
-
-// Cuenta cuántas solicitudes hay en cada estado.
-// Ejemplo de resultado: { total: 3, pendiente: 2, "en evaluación": 0, aprobada: 1, rechazada: 0 }
-function contarPorEstado(listaSolicitudes) {
-  const conteo = { total: listaSolicitudes.length };
-  ESTADOS.forEach((estado) => {
-    conteo[estado] = 0;
-  });
-  listaSolicitudes.forEach((solicitud) => {
-    if (conteo[solicitud.estado] !== undefined) {
-      conteo[solicitud.estado]++;
-    }
-  });
-  return conteo;
-}
-
-// Convierte creadoEn (Timestamp) a milisegundos para poder ordenar
-function milisegundos(solicitud) {
-  return solicitud.creadoEn && solicitud.creadoEn.toMillis ? solicitud.creadoEn.toMillis() : 0;
-}
 
 /* ---------- DOM ---------- */
 
@@ -101,9 +80,9 @@ function mostrarSolicitudes() {
   }
 
   const estado = selectEstado.value;
-  const filtradas = solicitudes
-    .filter((solicitud) => estado === "" || solicitud.estado === estado)
-    .sort((a, b) => milisegundos(b) - milisegundos(a));
+  const filtradas = ordenarRecientesPrimero(
+    solicitudes.filter((solicitud) => estado === "" || solicitud.estado === estado)
+  );
 
   if (filtradas.length === 0) {
     mostrarMensaje(mensaje, "No tienes solicitudes con el estado “" + estado + "”.", "info");

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Panel de administración de LogicTrans: solicitudes de cotización y flota de equipos.">
+  <title>Administración | LogicTrans</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/contacto.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="encabezado">
+    <a href="index.html"><img class="logo" src="img/logo-logictrans.svg" alt="Logo de LogicTrans" width="200" height="50"></a>
+    <nav>
+      <ul class="menu-principal">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="flota.html">Flota</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li class="menu-sesion" id="menu-sesion"><a href="login.html">Ingresar</a></li>
+      <li><a class="boton-menu" href="contacto.html">Solicitar cotización</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+  <section class="encabezado-panel">
+    <h1>Panel de administración</h1>
+    <p id="saludo-admin">Gestiona las solicitudes de cotización y la flota de equipos.</p>
+  </section>
+
+  <!-- Mensajes generales: verificación de permisos, carga y errores -->
+  <section class="seccion seccion-mensaje">
+    <p id="mensaje-admin" class="mensaje mensaje-carga" role="status" aria-live="polite">Verificando permisos...</p>
+  </section>
+
+  <!-- Todo el contenido se muestra solo después de confirmar que el usuario es administrador -->
+  <div id="contenido-admin" hidden>
+
+    <!-- Solo aparece cuando no hay equipos en la base -->
+    <section class="seccion" id="seccion-semilla" hidden>
+      <h2 class="titulo-seccion">La base de datos está vacía</h2>
+      <p class="subtitulo">Carga los 9 equipos de la flota y 8 solicitudes de ejemplo para probar la aplicación.</p>
+      <div class="centrado">
+        <button class="boton" type="button" id="boton-semilla">Cargar datos iniciales</button>
+      </div>
+      <p id="mensaje-semilla" class="mensaje" role="status" aria-live="polite" hidden></p>
+    </section>
+
+    <!-- Indicadores calculados con JavaScript -->
+    <section class="seccion">
+      <h2 class="titulo-seccion">Indicadores</h2>
+
+      <h3 class="subtitulo-panel">Solicitudes por estado</h3>
+      <div class="indicadores" id="indicadores-estado">
+        <div class="indicador"><span class="indicador-numero" data-estado="total">0</span><span>Total</span></div>
+        <div class="indicador estado-pendiente"><span class="indicador-numero" data-estado="pendiente">0</span><span>Pendientes</span></div>
+        <div class="indicador estado-en-evaluacion"><span class="indicador-numero" data-estado="en evaluación">0</span><span>En evaluación</span></div>
+        <div class="indicador estado-aprobada"><span class="indicador-numero" data-estado="aprobada">0</span><span>Aprobadas</span></div>
+        <div class="indicador estado-rechazada"><span class="indicador-numero" data-estado="rechazada">0</span><span>Rechazadas</span></div>
+      </div>
+
+      <h3 class="subtitulo-panel">Equipos más solicitados</h3>
+      <ol class="barras" id="mas-solicitados"></ol>
+      <p class="contador" id="sin-ranking" hidden>Todavía no hay solicitudes para calcular este indicador.</p>
+    </section>
+
+    <!-- Todas las solicitudes -->
+    <section class="seccion seccion-clara">
+      <h2 class="titulo-seccion">Solicitudes de cotización</h2>
+
+      <form class="filtros" id="filtros-solicitudes" role="search" aria-label="Filtrar solicitudes">
+        <div class="filtro">
+          <label for="buscar-solicitud">Buscar</label>
+          <input type="search" id="buscar-solicitud" placeholder="Cliente, empresa, equipo o ubicación">
+        </div>
+        <div class="filtro">
+          <label for="filtro-estado-admin">Estado</label>
+          <select id="filtro-estado-admin">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en evaluación">En evaluación</option>
+            <option value="aprobada">Aprobada</option>
+            <option value="rechazada">Rechazada</option>
+          </select>
+        </div>
+      </form>
+
+      <p class="contador" id="contador-solicitudes"></p>
+      <p id="mensaje-solicitudes" class="mensaje" role="status" aria-live="polite" hidden></p>
+
+      <div class="tabla-contenedor" id="contenedor-solicitudes">
+        <table class="ficha tabla-admin">
+          <caption>Solicitudes, de la más reciente a la más antigua</caption>
+          <thead>
+            <tr><th>Enviada</th><th>Cliente</th><th>Equipo</th><th>Inicio</th><th>Ubicación</th><th>Detalles</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="cuerpo-solicitudes"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CRUD de equipos -->
+    <section class="seccion">
+      <h2 class="titulo-seccion">Equipos de la flota</h2>
+
+      <form class="formulario formulario-equipo" id="form-equipo" novalidate>
+        <input type="hidden" id="equipo-id" name="equipoId">
+        <fieldset>
+          <legend id="titulo-form-equipo">Nuevo equipo</legend>
+          <label for="equipo-nombre">Nombre</label>
+          <input type="text" id="equipo-nombre" name="nombre" required minlength="3" maxlength="60" placeholder="Ej. Minicargador">
+
+          <label for="equipo-categoria">Categoría</label>
+          <input type="text" id="equipo-categoria" name="categoria" required maxlength="40" list="lista-categorias" placeholder="Elige una o escribe una nueva">
+          <datalist id="lista-categorias"></datalist>
+
+          <label for="equipo-descripcion">Descripción</label>
+          <textarea id="equipo-descripcion" name="descripcion" required minlength="10" maxlength="300" placeholder="Para qué sirve el equipo"></textarea>
+
+          <label for="equipo-capacidad">Capacidad referencial</label>
+          <input type="text" id="equipo-capacidad" name="capacidad" required maxlength="60" placeholder="Ej. Aprox. 5 toneladas">
+
+          <label for="equipo-usos">Usos (uno por línea)</label>
+          <textarea id="equipo-usos" name="usos" required placeholder="Zanjas&#10;Cimentaciones"></textarea>
+
+          <label for="equipo-imagen">Imagen</label>
+          <input type="text" id="equipo-imagen" name="imagen" maxlength="300" placeholder="img/excavadora.jpg o https://..." aria-describedby="nota-imagen">
+          <span class="nota" id="nota-imagen">Opcional. Ruta dentro de img/ o dirección que empiece con https://</span>
+
+          <label for="equipo-disponible"><input type="checkbox" id="equipo-disponible" name="disponible" checked> Disponible para cotizar</label>
+        </fieldset>
+        <p id="mensaje-form-equipo" class="mensaje" role="status" aria-live="polite" hidden></p>
+        <div class="botones-formulario">
+          <button class="boton" type="submit" id="boton-guardar-equipo">Agregar equipo</button>
+          <button class="boton-secundario" type="button" id="boton-cancelar-edicion" hidden>Cancelar edición</button>
+        </div>
+      </form>
+
+      <p id="mensaje-equipos" class="mensaje" role="status" aria-live="polite" hidden></p>
+
+      <div class="tabla-contenedor" id="contenedor-equipos">
+        <table class="ficha tabla-admin">
+          <caption>Equipos registrados</caption>
+          <thead>
+            <tr><th>Nombre</th><th>Categoría</th><th>Capacidad</th><th>Disponible</th><th>Solicitudes</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="cuerpo-equipos"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-contenido">
+      <div class="pie-bloque">
+        <h2>LogicTrans</h2>
+        <p>Col. Escalón, San Salvador, El Salvador<br>Tel. +503 2222-0000</p>
+        <p>Lunes a viernes 7:00 a. m.–5:00 p. m.<br>Sábado 7:00 a. m.–12:00 m.</p>
+      </div>
+      <div class="pie-bloque">
+        <h2>Enlaces rápidos</h2>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="flota.html">Flota</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="derechos">© 2026 LogicTrans. Todos los derechos reservados.</p>
+  </footer>
+
+  <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -353,8 +353,141 @@ fieldset:disabled {
   cursor: not-allowed;
 }
 
+/* ---------- Panel del administrador (admin.html) ---------- */
+
+/* Sección que solo contiene el mensaje general */
+.seccion-mensaje {
+  padding-top: 24px;
+  padding-bottom: 0;
+}
+
+.centrado {
+  text-align: center;
+}
+
+.subtitulo-panel {
+  max-width: 900px;
+  margin: 32px auto 0;
+  color: var(--azul-principal);
+}
+
+/* Barras de "equipos más solicitados" */
+.barras {
+  max-width: 900px;
+  margin: 16px auto 0;
+  list-style: none;
+}
+
+.barra-item {
+  display: grid;
+  grid-template-columns: 220px 1fr 190px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.barra-nombre {
+  font-weight: 700;
+}
+
+.barra-fondo {
+  height: 18px;
+  background-color: var(--fondo-claro);
+  border-radius: 999px;
+}
+
+.barra {
+  height: 100%;
+  background-color: var(--acento);
+  border-radius: 999px;
+}
+
+.barra-valor {
+  font-size: 14px;
+  color: var(--texto-secundario);
+}
+
+/* Tablas del administrador: se desplazan de lado en pantallas pequeñas */
+.tabla-contenedor {
+  max-width: 1100px;
+  margin: 20px auto 0;
+  overflow-x: auto;
+}
+
+.tabla-admin {
+  margin-top: 0;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla-admin td {
+  vertical-align: top;
+}
+
+.tabla-admin tbody tr:nth-child(even) {
+  background-color: #F8FAFC;
+}
+
+.tabla-admin .disponibilidad {
+  margin: 0;
+}
+
+/* Texto pequeño debajo del dato principal de una celda */
+.dato-secundario {
+  display: block;
+  margin-top: 4px;
+  color: var(--texto-secundario);
+}
+
+/* Select para cambiar el estado, con el color del estado actual */
+.tabla-admin .selector-estado {
+  width: auto;
+  min-width: 150px;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-estado);
+  background-color: var(--fondo-estado);
+  border: 1px solid var(--color-estado);
+}
+
+/* Botones Editar y Eliminar de la tabla de equipos */
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boton-pequeno {
+  margin-top: 0;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* Formulario de equipos */
+.formulario-equipo {
+  max-width: 700px;
+  margin: 24px auto 0;
+}
+
+.formulario-equipo textarea {
+  height: 90px;
+}
+
+.botones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
 /* Diseño adaptable, pantallas de hasta 768px */
 @media (max-width: 768px) {
+  .barra-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
   .encabezado-panel {
     padding: 36px 16px;
   }
