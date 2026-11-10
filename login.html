@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ingresa o crea tu cuenta en LogicTrans para solicitar cotizaciones y darles seguimiento.">
+  <title>Ingresar | LogicTrans</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/contacto.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <header class="encabezado">
+    <a href="index.html"><img class="logo" src="img/logo-logictrans.svg" alt="Logo de LogicTrans" width="200" height="50"></a>
+    <nav>
+      <ul class="menu-principal">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="flota.html">Flota</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li class="menu-sesion" id="menu-sesion"><a href="login.html" class="activo">Ingresar</a></li>
+      <li><a class="boton-menu" href="contacto.html">Solicitar cotización</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+  <section class="banner-pagina banner-contacto">
+    <div class="capa">
+      <h1>Accede a tu cuenta</h1>
+      <p>Con tu cuenta puedes solicitar cotizaciones y ver en qué estado están.</p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="dos-columnas acceso">
+
+      <!-- Formulario de ingreso -->
+      <form id="form-ingreso" class="formulario" novalidate>
+        <fieldset>
+          <legend>Ya tengo cuenta</legend>
+          <label for="ingreso-correo">Correo electrónico</label>
+          <input type="email" id="ingreso-correo" name="correo" required autocomplete="email" placeholder="correo@empresa.com">
+          <label for="ingreso-contrasena">Contraseña</label>
+          <input type="password" id="ingreso-contrasena" name="contrasena" required minlength="6" autocomplete="current-password">
+        </fieldset>
+        <p id="mensaje-ingreso" class="mensaje" role="status" aria-live="polite" hidden></p>
+        <button class="boton" type="submit">Ingresar</button>
+      </form>
+
+      <!-- Formulario de registro -->
+      <form id="form-registro" class="formulario" novalidate>
+        <fieldset>
+          <legend>Soy nuevo</legend>
+          <label for="registro-nombre">Nombre completo</label>
+          <input type="text" id="registro-nombre" name="nombre" required minlength="3" maxlength="60" autocomplete="name" placeholder="Guillermo Calderón">
+          <label for="registro-correo">Correo electrónico</label>
+          <input type="email" id="registro-correo" name="correo" required autocomplete="email" placeholder="correo@empresa.com">
+          <label for="registro-contrasena">Contraseña</label>
+          <input type="password" id="registro-contrasena" name="contrasena" required minlength="6" autocomplete="new-password" aria-describedby="nota-contrasena">
+          <span class="nota" id="nota-contrasena">Mínimo 6 caracteres, con al menos una letra y un número.</span>
+          <label for="registro-confirmacion">Repite la contraseña</label>
+          <input type="password" id="registro-confirmacion" name="confirmacion" required autocomplete="new-password">
+        </fieldset>
+        <p id="mensaje-registro" class="mensaje" role="status" aria-live="polite" hidden></p>
+        <button class="boton" type="submit">Crear cuenta</button>
+      </form>
+
+    </div>
+  </section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-contenido">
+      <div class="pie-bloque">
+        <h2>LogicTrans</h2>
+        <p>Col. Escalón, San Salvador, El Salvador<br>Tel. +503 2222-0000</p>
+        <p>Lunes a viernes 7:00 a. m.–5:00 p. m.<br>Sábado 7:00 a. m.–12:00 m.</p>
+      </div>
+      <div class="pie-bloque">
+        <h2>Enlaces rápidos</h2>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="flota.html">Flota</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="derechos">© 2026 LogicTrans. Todos los derechos reservados.</p>
+  </footer>
+
+  <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
