@@ -2,7 +2,10 @@
 // Comportamiento de login.html: formularios de ingreso y de registro.
 
 import { iniciarSesion, registrarUsuario, obtenerRol, obtenerSesion, mensajeErrorAuth } from "./auth.js";
-import { mostrarMensaje, ocultarMensaje, bloquearBoton, desbloquearBoton } from "./ui.js";
+import {
+  mostrarMensaje, ocultarMensaje, bloquearBoton, desbloquearBoton,
+  esCorreoValido, soloContiene, tieneLetra, tieneNumero, LETRAS_Y_ESPACIOS
+} from "./ui.js";
 
 // Elementos de la página
 const formIngreso = document.querySelector("#form-ingreso");
@@ -10,20 +13,22 @@ const mensajeIngreso = document.querySelector("#mensaje-ingreso");
 const formRegistro = document.querySelector("#form-registro");
 const mensajeRegistro = document.querySelector("#mensaje-registro");
 
-// Reglas de validación
-const patronCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const patronNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+// Páginas a las que se puede volver después de entrar (?volver=...)
+const PAGINAS_PERMITIDAS = ["index.html", "flota.html", "nosotros.html", "contacto.html", "panel.html", "admin.html"];
 
 // Decide a qué página ir después de entrar.
 // Si la URL trae ?volver=contacto.html, regresa allí; si no, va al panel según el rol.
 function paginaDestino(rol) {
   const parametros = new URLSearchParams(window.location.search);
   const volver = parametros.get("volver");
-  // Solo se aceptan nombres de páginas propias, como "contacto.html"
-  if (volver && /^[a-z-]+\.html$/.test(volver)) {
+  // Solo se aceptan páginas propias del sitio
+  if (volver && PAGINAS_PERMITIDAS.includes(volver)) {
     return volver;
   }
-  return rol === "admin" ? "admin.html" : "panel.html";
+  if (rol === "admin") {
+    return "admin.html";
+  }
+  return "panel.html";
 }
 
 // Marca un campo como inválido, le pone el foco y muestra el mensaje
@@ -35,14 +40,15 @@ function marcarError(campo, contenedor, texto) {
 
 // Quita la marca de error de todos los campos de un formulario
 function limpiarErrores(formulario) {
-  formulario.querySelectorAll("[aria-invalid]").forEach((campo) => {
+  const camposConError = formulario.querySelectorAll("[aria-invalid]");
+  for (const campo of camposConError) {
     campo.removeAttribute("aria-invalid");
-  });
+  }
 }
 
 /* ---------- INGRESO ---------- */
 
-formIngreso.addEventListener("submit", async (evento) => {
+async function ingresar(evento) {
   evento.preventDefault(); // evita que la página se recargue
   limpiarErrores(formIngreso);
   ocultarMensaje(mensajeIngreso);
@@ -53,7 +59,7 @@ formIngreso.addEventListener("submit", async (evento) => {
   const contrasena = campoContrasena.value;
 
   // Validaciones
-  if (!patronCorreo.test(correo)) {
+  if (!esCorreoValido(correo)) {
     marcarError(campoCorreo, mensajeIngreso, "Escribe un correo válido.");
     return;
   }
@@ -76,11 +82,13 @@ formIngreso.addEventListener("submit", async (evento) => {
     mostrarMensaje(mensajeIngreso, mensajeErrorAuth(error), "error");
     desbloquearBoton(boton);
   }
-});
+}
+
+formIngreso.addEventListener("submit", ingresar);
 
 /* ---------- REGISTRO ---------- */
 
-formRegistro.addEventListener("submit", async (evento) => {
+async function registrarse(evento) {
   evento.preventDefault();
   limpiarErrores(formRegistro);
   ocultarMensaje(mensajeRegistro);
@@ -100,15 +108,15 @@ formRegistro.addEventListener("submit", async (evento) => {
     marcarError(campoNombre, mensajeRegistro, "El nombre debe tener entre 3 y 60 caracteres.");
     return;
   }
-  if (!patronNombre.test(nombre)) {
+  if (!soloContiene(nombre, LETRAS_Y_ESPACIOS)) {
     marcarError(campoNombre, mensajeRegistro, "El nombre solo puede tener letras y espacios.");
     return;
   }
-  if (!patronCorreo.test(correo)) {
+  if (!esCorreoValido(correo)) {
     marcarError(campoCorreo, mensajeRegistro, "Escribe un correo válido.");
     return;
   }
-  if (contrasena.length < 6 || !/[A-Za-z]/.test(contrasena) || !/[0-9]/.test(contrasena)) {
+  if (contrasena.length < 6 || !tieneLetra(contrasena) || !tieneNumero(contrasena)) {
     marcarError(campoContrasena, mensajeRegistro, "La contraseña necesita mínimo 6 caracteres, una letra y un número.");
     return;
   }
@@ -131,15 +139,17 @@ formRegistro.addEventListener("submit", async (evento) => {
     mostrarMensaje(mensajeRegistro, mensajeErrorAuth(error), "error");
     desbloquearBoton(boton);
   }
-});
+}
+
+formRegistro.addEventListener("submit", registrarse);
 
 /* ---------- AL ABRIR LA PÁGINA ---------- */
 
 // Si ya hay una sesión iniciada, no tiene sentido mostrar los formularios
 async function revisarSesionActual() {
-  const { usuario, rol } = await obtenerSesion();
-  if (usuario) {
-    window.location.href = paginaDestino(rol);
+  const sesion = await obtenerSesion();
+  if (sesion.usuario) {
+    window.location.href = paginaDestino(sesion.rol);
   }
 }
 

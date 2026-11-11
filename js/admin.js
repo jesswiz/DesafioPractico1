@@ -69,8 +69,9 @@ let solicitudes = [];
 async function cargarDatos() {
   mostrarMensaje(mensajeAdmin, "Cargando datos...", "carga");
   try {
-    // Las dos consultas se hacen al mismo tiempo y se espera a que terminen ambas
-    [equipos, solicitudes] = await Promise.all([obtenerEquipos(), obtenerTodasLasSolicitudes()]);
+    // Primero se leen los equipos y luego las solicitudes
+    equipos = await obtenerEquipos();
+    solicitudes = await obtenerTodasLasSolicitudes();
     ocultarMensaje(mensajeAdmin);
     actualizarTodo();
   } catch (error) {
@@ -92,7 +93,7 @@ function actualizarTodo() {
    DATOS INICIALES
    ========================================================= */
 
-botonSemilla.addEventListener("click", async () => {
+async function cargarSemilla() {
   if (!confirm("Se cargarán 9 equipos y 8 solicitudes de ejemplo. ¿Continuar?")) {
     return;
   }
@@ -109,7 +110,9 @@ botonSemilla.addEventListener("click", async () => {
   } finally {
     desbloquearBoton(botonSemilla);
   }
-});
+}
+
+botonSemilla.addEventListener("click", cargarSemilla);
 
 /* =========================================================
    INDICADORES
@@ -118,9 +121,10 @@ botonSemilla.addEventListener("click", async () => {
 function mostrarIndicadores() {
   // Solicitudes por estado
   const conteo = contarPorEstado(solicitudes);
-  indicadoresEstado.querySelectorAll("[data-estado]").forEach((numero) => {
+  const numeros = indicadoresEstado.querySelectorAll("[data-estado]");
+  for (const numero of numeros) {
     numero.textContent = conteo[numero.dataset.estado];
-  });
+  }
 
   // Equipos más solicitados (los 5 primeros) como barras horizontales
   listaRanking.textContent = "";
@@ -131,7 +135,7 @@ function mostrarIndicadores() {
   }
 
   const maximo = ranking[0].solicitudes; // el primero es el que tiene más
-  ranking.forEach((item) => {
+  for (const item of ranking) {
     const fila = crearElemento("li", "barra-item");
     fila.append(crearElemento("span", "barra-nombre", item.nombre));
 
@@ -141,43 +145,52 @@ function mostrarIndicadores() {
     fondo.append(barra);
     fila.append(fondo);
 
-    const texto = item.solicitudes + (item.solicitudes === 1 ? " solicitud" : " solicitudes") +
-      " · " + item.unidades + (item.unidades === 1 ? " unidad" : " unidades");
-    fila.append(crearElemento("span", "barra-valor", texto));
+    let textoSolicitudes = item.solicitudes + " solicitudes";
+    if (item.solicitudes === 1) {
+      textoSolicitudes = "1 solicitud";
+    }
+    let textoUnidades = item.unidades + " unidades";
+    if (item.unidades === 1) {
+      textoUnidades = "1 unidad";
+    }
+    fila.append(crearElemento("span", "barra-valor", textoSolicitudes + " · " + textoUnidades));
 
     listaRanking.append(fila);
-  });
+  }
 }
 
 /* =========================================================
    SOLICITUDES
    ========================================================= */
 
-// Aplica la búsqueda y el filtro de estado, y ordena (recientes primero)
-function filtrarSolicitudes() {
+// Devuelve true si la solicitud coincide con la búsqueda y el filtro de estado
+function cumpleFiltrosSolicitud(solicitud) {
   const texto = normalizarTexto(buscarSolicitud.value.trim());
   const estado = filtroEstado.value;
 
-  const filtradas = solicitudes.filter((solicitud) => {
-    const contenidoSolicitud = normalizarTexto([
-      solicitud.nombre, solicitud.empresa, solicitud.correo,
-      solicitud.equipoNombre, solicitud.ubicacion
-    ].join(" "));
-    const coincideTexto = contenidoSolicitud.includes(texto);
-    const coincideEstado = estado === "" || solicitud.estado === estado;
-    return coincideTexto && coincideEstado;
-  });
+  const contenidoSolicitud = normalizarTexto(
+    solicitud.nombre + " " + solicitud.empresa + " " + solicitud.correo + " " +
+    solicitud.equipoNombre + " " + solicitud.ubicacion
+  );
+  const coincideTexto = contenidoSolicitud.includes(texto);
+  const coincideEstado = estado === "" || solicitud.estado === estado;
+  return coincideTexto && coincideEstado;
+}
 
+// Aplica la búsqueda y el filtro de estado, y ordena (recientes primero)
+function filtrarSolicitudes() {
+  const filtradas = solicitudes.filter(cumpleFiltrosSolicitud);
   return ordenarRecientesPrimero(filtradas);
 }
 
 // Crea una celda <td> con el contenido indicado y la agrega a la fila.
 // "etiqueta" es el nombre de la columna: en móvil la tabla se muestra como
 // tarjetas y el CSS escribe esa etiqueta antes de cada dato (data-etiqueta).
-function agregarCelda(fila, etiqueta, ...contenidoCelda) {
+// Si la celda necesita más contenido, se agrega después con celda.append().
+function agregarCelda(fila, etiqueta, contenidoCelda) {
   const celda = document.createElement("td");
   celda.dataset.etiqueta = etiqueta;
-  celda.append(...contenidoCelda);
+  celda.append(contenidoCelda);
   fila.append(celda);
   return celda;
 }
@@ -188,24 +201,31 @@ function crearFilaSolicitud(solicitud) {
 
   agregarCelda(fila, "Enviada", formatearMarcaTiempo(solicitud.creadoEn));
 
-  agregarCelda(fila, "Cliente",
-    crearElemento("b", "", solicitud.nombre),
-    document.createElement("br"),
-    solicitud.empresa,
-    crearElemento("small", "dato-secundario", solicitud.correo + " · " + solicitud.telefono)
-  );
+  const celdaCliente = agregarCelda(fila, "Cliente", crearElemento("b", "", solicitud.nombre));
+  celdaCliente.append(document.createElement("br"));
+  celdaCliente.append(solicitud.empresa);
+  celdaCliente.append(crearElemento("small", "dato-secundario", solicitud.correo + " · " + solicitud.telefono));
 
   agregarCelda(fila, "Equipo", solicitud.equipoNombre + " × " + solicitud.cantidad);
 
-  agregarCelda(fila, "Inicio",
-    formatearFecha(solicitud.inicio),
-    crearElemento("small", "dato-secundario", solicitud.duracion + (solicitud.duracion === 1 ? " día" : " días"))
-  );
+  let textoDuracion = solicitud.duracion + " días";
+  if (solicitud.duracion === 1) {
+    textoDuracion = "1 día";
+  }
+  const celdaInicio = agregarCelda(fila, "Inicio", formatearFecha(solicitud.inicio));
+  celdaInicio.append(crearElemento("small", "dato-secundario", textoDuracion));
 
   agregarCelda(fila, "Ubicación", solicitud.ubicacion);
 
-  const detalles = (solicitud.conOperador ? "Con operador" : "Sin operador") +
-    (solicitud.transporte ? ", con lowboy" : ", sin transporte");
+  let detalles = "Sin operador";
+  if (solicitud.conOperador) {
+    detalles = "Con operador";
+  }
+  if (solicitud.transporte) {
+    detalles = detalles + ", con lowboy";
+  } else {
+    detalles = detalles + ", sin transporte";
+  }
   const celdaDetalles = agregarCelda(fila, "Detalles", detalles);
   if (solicitud.mensaje) {
     celdaDetalles.append(crearElemento("small", "dato-secundario", "“" + solicitud.mensaje + "”"));
@@ -215,13 +235,15 @@ function crearFilaSolicitud(solicitud) {
   const selectEstado = document.createElement("select");
   selectEstado.className = "selector-estado " + claseEstado(solicitud.estado);
   selectEstado.setAttribute("aria-label", "Estado de la solicitud de " + solicitud.nombre);
-  ESTADOS.forEach((estado) => {
+  for (const estado of ESTADOS) {
     const opcion = crearElemento("option", "", estado);
     opcion.value = estado;
     selectEstado.append(opcion);
-  });
+  }
   selectEstado.value = solicitud.estado;
-  selectEstado.addEventListener("change", () => cambiarEstado(solicitud, selectEstado));
+  selectEstado.addEventListener("change", function () {
+    cambiarEstado(solicitud, selectEstado);
+  });
   agregarCelda(fila, "Estado", selectEstado);
 
   return fila;
@@ -249,9 +271,9 @@ function mostrarSolicitudes() {
 
   ocultarMensaje(mensajeSolicitudes);
   contenedorSolicitudes.hidden = false;
-  filtradas.forEach((solicitud) => {
+  for (const solicitud of filtradas) {
     cuerpoSolicitudes.append(crearFilaSolicitud(solicitud));
-  });
+  }
 }
 
 // Guarda el nuevo estado de una solicitud en Firestore
@@ -275,10 +297,15 @@ async function cambiarEstado(solicitud, selectEstado) {
   }
 }
 
+// Enter en el buscador no debe recargar la página
+function evitarRecarga(evento) {
+  evento.preventDefault();
+}
+
 // Eventos de los filtros de solicitudes
 buscarSolicitud.addEventListener("input", mostrarSolicitudes);
 filtroEstado.addEventListener("change", mostrarSolicitudes);
-formFiltrosSolicitudes.addEventListener("submit", (evento) => evento.preventDefault());
+formFiltrosSolicitudes.addEventListener("submit", evitarRecarga);
 
 /* =========================================================
    EQUIPOS: LISTA
@@ -286,22 +313,45 @@ formFiltrosSolicitudes.addEventListener("submit", (evento) => evento.preventDefa
 
 // Cuántas solicitudes tiene un equipo (todas, o solo las activas)
 function contarSolicitudesDeEquipo(idEquipo, soloActivas = false) {
-  return solicitudes.filter((solicitud) => {
+  let cantidad = 0;
+  for (const solicitud of solicitudes) {
     const esDelEquipo = solicitud.equipoId === idEquipo;
     const estaActiva = solicitud.estado === "pendiente" || solicitud.estado === "en evaluación";
-    return esDelEquipo && (!soloActivas || estaActiva);
-  }).length;
+    if (esDelEquipo && (!soloActivas || estaActiva)) {
+      cantidad = cantidad + 1;
+    }
+  }
+  return cantidad;
+}
+
+// Compara dos textos en orden alfabético (en español)
+function compararTextos(a, b) {
+  return a.localeCompare(b, "es");
+}
+
+// Compara dos equipos por nombre
+function compararPorNombre(a, b) {
+  return a.nombre.localeCompare(b.nombre, "es");
 }
 
 // Llena las sugerencias de categoría con las categorías existentes
 function llenarCategorias() {
   listaCategorias.textContent = "";
-  const categorias = [...new Set(equipos.map((equipo) => equipo.categoria))].sort((a, b) => a.localeCompare(b, "es"));
-  categorias.forEach((categoria) => {
+
+  // Lista de categorías sin repetir
+  const categorias = [];
+  for (const equipo of equipos) {
+    if (!categorias.includes(equipo.categoria)) {
+      categorias.push(equipo.categoria);
+    }
+  }
+  categorias.sort(compararTextos);
+
+  for (const categoria of categorias) {
     const opcion = document.createElement("option");
     opcion.value = categoria;
     listaCategorias.append(opcion);
-  });
+  }
 }
 
 // Crea la fila <tr> de un equipo con sus botones Editar y Eliminar
@@ -311,23 +361,34 @@ function crearFilaEquipo(equipo) {
   agregarCelda(fila, "Nombre", crearElemento("b", "", equipo.nombre));
   agregarCelda(fila, "Categoría", equipo.categoria);
   agregarCelda(fila, "Capacidad", equipo.capacidad);
-  agregarCelda(fila, "Disponible", crearElemento("span",
-    "disponibilidad " + (equipo.disponible ? "disponible" : "no-disponible"),
-    equipo.disponible ? "Sí" : "No"));
+
+  let claseDisponible = "disponibilidad no-disponible";
+  let textoDisponible = "No";
+  if (equipo.disponible) {
+    claseDisponible = "disponibilidad disponible";
+    textoDisponible = "Sí";
+  }
+  agregarCelda(fila, "Disponible", crearElemento("span", claseDisponible, textoDisponible));
+
   agregarCelda(fila, "Solicitudes", String(contarSolicitudesDeEquipo(equipo.id)));
 
   const botonEditar = crearElemento("button", "boton-secundario boton-pequeno", "Editar");
   botonEditar.type = "button";
   botonEditar.setAttribute("aria-label", "Editar " + equipo.nombre);
-  botonEditar.addEventListener("click", () => editarEquipo(equipo));
+  botonEditar.addEventListener("click", function () {
+    editarEquipo(equipo);
+  });
 
   const botonEliminar = crearElemento("button", "boton-peligro boton-pequeno", "Eliminar");
   botonEliminar.type = "button";
   botonEliminar.setAttribute("aria-label", "Eliminar " + equipo.nombre);
-  botonEliminar.addEventListener("click", () => borrarEquipo(equipo, botonEliminar));
+  botonEliminar.addEventListener("click", function () {
+    borrarEquipo(equipo, botonEliminar);
+  });
 
   const acciones = crearElemento("div", "acciones");
-  acciones.append(botonEditar, botonEliminar);
+  acciones.append(botonEditar);
+  acciones.append(botonEliminar);
   agregarCelda(fila, "Acciones", acciones);
 
   return fila;
@@ -345,10 +406,11 @@ function mostrarEquipos() {
 
   ocultarMensaje(mensajeEquipos);
   contenedorEquipos.hidden = false;
-  const ordenados = [...equipos].sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
-  ordenados.forEach((equipo) => {
+  const ordenados = equipos.slice();
+  ordenados.sort(compararPorNombre);
+  for (const equipo of ordenados) {
     cuerpoEquipos.append(crearFilaEquipo(equipo));
-  });
+  }
 }
 
 /* =========================================================
@@ -358,51 +420,108 @@ function mostrarEquipos() {
 // Lee el formulario y arma el objeto del equipo
 function leerFormEquipo() {
   const f = formEquipo;
-  return {
-    nombre: f.nombre.value.trim(),
-    categoria: f.categoria.value.trim(),
-    descripcion: f.descripcion.value.trim(),
-    capacidad: f.capacidad.value.trim(),
-    // Un uso por línea; se quitan espacios y líneas vacías
-    usos: f.usos.value.split("\n").map((uso) => uso.trim()).filter((uso) => uso !== ""),
-    imagen: f.imagen.value.trim(),
-    disponible: f.disponible.checked
-  };
+
+  // Un uso por línea; se quitan espacios y líneas vacías
+  const usos = [];
+  const lineas = f.usos.value.split("\n");
+  for (const linea of lineas) {
+    const uso = linea.trim();
+    if (uso !== "") {
+      usos.push(uso);
+    }
+  }
+
+  const equipo = {};
+  equipo.nombre = f.nombre.value.trim();
+  equipo.categoria = f.categoria.value.trim();
+  equipo.descripcion = f.descripcion.value.trim();
+  equipo.capacidad = f.capacidad.value.trim();
+  equipo.usos = usos;
+  equipo.imagen = f.imagen.value.trim();
+  equipo.disponible = f.disponible.checked;
+  return equipo;
 }
 
-// Valida el equipo. Devuelve null si está bien, o { campo, texto } con el primer error.
+// Arma el objeto de error: el campo con problema y el texto que se muestra
+function crearError(campo, texto) {
+  const error = {};
+  error.campo = campo;
+  error.texto = texto;
+  return error;
+}
+
+// Regla del negocio: no puede haber dos equipos con el mismo nombre.
+// Se compara sin mayúsculas ni tildes, y sin contar el equipo que se está editando.
+function nombreRepetido(nombre, idEditando) {
+  for (const equipo of equipos) {
+    if (equipo.id !== idEditando && normalizarTexto(equipo.nombre) === normalizarTexto(nombre)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// La imagen es opcional. Si se escribe, debe ser una ruta dentro de img/
+// (como img/equipo.jpg) o una dirección que empiece con https://, sin espacios.
+function imagenValida(imagen) {
+  if (imagen === "") {
+    return true;
+  }
+  if (imagen.includes(" ")) {
+    return false;
+  }
+  if (imagen.startsWith("https://") && imagen.length > 8) {
+    return true;
+  }
+  if (imagen.startsWith("img/") && imagen.length > 4) {
+    // Después de "img/" no puede haber otra carpeta
+    const nombreArchivo = imagen.slice(4);
+    if (!nombreArchivo.includes("/")) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Valida el equipo. Devuelve null si está bien, o un error { campo, texto } con el primer problema.
 function validarEquipo(datos, idEditando) {
   const f = formEquipo;
 
   if (datos.nombre.length < 3 || datos.nombre.length > 60) {
-    return { campo: f.nombre, texto: "El nombre debe tener entre 3 y 60 caracteres." };
+    return crearError(f.nombre, "El nombre debe tener entre 3 y 60 caracteres.");
   }
-  // Regla del negocio: no puede haber dos equipos con el mismo nombre
-  // (se compara sin mayúsculas ni tildes, y sin contar el equipo que se está editando)
-  const repetido = equipos.some((equipo) =>
-    equipo.id !== idEditando && normalizarTexto(equipo.nombre) === normalizarTexto(datos.nombre));
-  if (repetido) {
-    return { campo: f.nombre, texto: "Ya existe un equipo llamado “" + datos.nombre + "”." };
+  if (nombreRepetido(datos.nombre, idEditando)) {
+    return crearError(f.nombre, "Ya existe un equipo llamado “" + datos.nombre + "”.");
   }
   if (datos.categoria.length < 3 || datos.categoria.length > 40) {
-    return { campo: f.categoria, texto: "La categoría debe tener entre 3 y 40 caracteres." };
+    return crearError(f.categoria, "La categoría debe tener entre 3 y 40 caracteres.");
   }
   if (datos.descripcion.length < 10 || datos.descripcion.length > 300) {
-    return { campo: f.descripcion, texto: "La descripción debe tener entre 10 y 300 caracteres." };
+    return crearError(f.descripcion, "La descripción debe tener entre 10 y 300 caracteres.");
   }
   if (datos.capacidad.length < 2 || datos.capacidad.length > 60) {
-    return { campo: f.capacidad, texto: "La capacidad debe tener entre 2 y 60 caracteres." };
+    return crearError(f.capacidad, "La capacidad debe tener entre 2 y 60 caracteres.");
   }
   if (datos.usos.length === 0 || datos.usos.length > 8) {
-    return { campo: f.usos, texto: "Escribe entre 1 y 8 usos, uno por línea." };
+    return crearError(f.usos, "Escribe entre 1 y 8 usos, uno por línea.");
   }
-  if (datos.usos.some((uso) => uso.length > 60)) {
-    return { campo: f.usos, texto: "Cada uso puede tener como máximo 60 caracteres." };
+  for (const uso of datos.usos) {
+    if (uso.length > 60) {
+      return crearError(f.usos, "Cada uso puede tener como máximo 60 caracteres.");
+    }
   }
-  if (datos.imagen !== "" && !/^(img\/[\w.-]+|https:\/\/\S+)$/.test(datos.imagen)) {
-    return { campo: f.imagen, texto: "La imagen debe ser una ruta como img/equipo.jpg o una dirección https://" };
+  if (!imagenValida(datos.imagen)) {
+    return crearError(f.imagen, "La imagen debe ser una ruta como img/equipo.jpg o una dirección https://");
   }
   return null;
+}
+
+// Quita la marca de error de los campos del formulario de equipos
+function limpiarErroresEquipo() {
+  const camposConError = formEquipo.querySelectorAll("[aria-invalid]");
+  for (const campo of camposConError) {
+    campo.removeAttribute("aria-invalid");
+  }
 }
 
 // Deja el formulario listo para agregar un equipo nuevo
@@ -412,7 +531,7 @@ function modoNuevo() {
   tituloFormEquipo.textContent = "Nuevo equipo";
   botonGuardarEquipo.textContent = "Agregar equipo";
   botonCancelarEdicion.hidden = true;
-  formEquipo.querySelectorAll("[aria-invalid]").forEach((campo) => campo.removeAttribute("aria-invalid"));
+  limpiarErroresEquipo();
 }
 
 // Carga los datos de un equipo en el formulario para editarlo
@@ -425,26 +544,36 @@ function editarEquipo(equipo) {
   f.categoria.value = equipo.categoria;
   f.descripcion.value = equipo.descripcion;
   f.capacidad.value = equipo.capacidad;
-  f.usos.value = (equipo.usos || []).join("\n");
-  f.imagen.value = equipo.imagen || "";
+  if (equipo.usos) {
+    f.usos.value = equipo.usos.join("\n");
+  } else {
+    f.usos.value = "";
+  }
+  if (equipo.imagen) {
+    f.imagen.value = equipo.imagen;
+  } else {
+    f.imagen.value = "";
+  }
   f.disponible.checked = equipo.disponible === true;
 
   tituloFormEquipo.textContent = "Editar equipo: " + equipo.nombre;
   botonGuardarEquipo.textContent = "Guardar cambios";
   botonCancelarEdicion.hidden = false;
-  formEquipo.scrollIntoView({ behavior: "smooth", block: "start" });
-  f.nombre.focus({ preventScroll: true });
+  formEquipo.scrollIntoView();
+  f.nombre.focus();
 }
 
-botonCancelarEdicion.addEventListener("click", () => {
+function cancelarEdicion() {
   modoNuevo();
   ocultarMensaje(mensajeFormEquipo);
-});
+}
+
+botonCancelarEdicion.addEventListener("click", cancelarEdicion);
 
 // Guardar: crea un equipo nuevo o actualiza el que se está editando
-formEquipo.addEventListener("submit", async (evento) => {
+async function guardarEquipo(evento) {
   evento.preventDefault();
-  formEquipo.querySelectorAll("[aria-invalid]").forEach((campo) => campo.removeAttribute("aria-invalid"));
+  limpiarErroresEquipo();
   ocultarMensaje(mensajeFormEquipo);
 
   const idEditando = campoIdEquipo.value; // vacío si es un equipo nuevo
@@ -463,12 +592,19 @@ formEquipo.addEventListener("submit", async (evento) => {
   try {
     if (idEditando) {
       await actualizarEquipo(idEditando, datos);
-      // Se reemplaza el equipo en el arreglo local
-      equipos = equipos.map((equipo) => (equipo.id === idEditando ? { id: idEditando, ...datos } : equipo));
+      // Se reemplaza el equipo en el arreglo local (el id se agrega
+      // después de guardar para que no quede como campo en Firestore)
+      datos.id = idEditando;
+      for (let i = 0; i < equipos.length; i++) {
+        if (equipos[i].id === idEditando) {
+          equipos[i] = datos;
+        }
+      }
       mostrarMensaje(mensajeFormEquipo, "Se guardaron los cambios de “" + datos.nombre + "”.", "exito");
     } else {
       const idNuevo = await crearEquipo(datos);
-      equipos.push({ id: idNuevo, ...datos });
+      datos.id = idNuevo;
+      equipos.push(datos);
       mostrarMensaje(mensajeFormEquipo, "Se agregó el equipo “" + datos.nombre + "”.", "exito");
     }
     desbloquearBoton(botonGuardarEquipo);
@@ -479,7 +615,9 @@ formEquipo.addEventListener("submit", async (evento) => {
     desbloquearBoton(botonGuardarEquipo);
     mostrarMensaje(mensajeFormEquipo, "No se pudo guardar el equipo. Inténtalo de nuevo.", "error");
   }
-});
+}
+
+formEquipo.addEventListener("submit", guardarEquipo);
 
 /* =========================================================
    EQUIPOS: ELIMINAR
@@ -489,9 +627,12 @@ async function borrarEquipo(equipo, boton) {
   // Regla del negocio: no se elimina un equipo con solicitudes pendientes o en evaluación
   const activas = contarSolicitudesDeEquipo(equipo.id, true);
   if (activas > 0) {
+    let textoActivas = activas + " solicitudes activas";
+    if (activas === 1) {
+      textoActivas = "1 solicitud activa";
+    }
     mostrarMensaje(mensajeEquipos,
-      "No se puede eliminar “" + equipo.nombre + "” porque tiene " + activas +
-      (activas === 1 ? " solicitud activa" : " solicitudes activas") +
+      "No se puede eliminar “" + equipo.nombre + "” porque tiene " + textoActivas +
       ". Puedes editarlo y marcarlo como no disponible.", "error");
     return;
   }
@@ -503,7 +644,14 @@ async function borrarEquipo(equipo, boton) {
   bloquearBoton(boton, "Eliminando...");
   try {
     await eliminarEquipo(equipo.id);
-    equipos = equipos.filter((e) => e.id !== equipo.id);
+    // Se quita del arreglo local
+    const restantes = [];
+    for (const otro of equipos) {
+      if (otro.id !== equipo.id) {
+        restantes.push(otro);
+      }
+    }
+    equipos = restantes;
     // Si se estaba editando ese mismo equipo, se limpia el formulario
     if (campoIdEquipo.value === equipo.id) {
       modoNuevo();
@@ -521,24 +669,30 @@ async function borrarEquipo(equipo, boton) {
    AL ABRIR LA PÁGINA
    ========================================================= */
 
+function irAlPanelDelCliente() {
+  window.location.href = "panel.html";
+}
+
 async function iniciar() {
-  const { usuario, rol } = await obtenerSesion();
+  const sesion = await obtenerSesion();
 
   // Sin sesión: a login y luego de vuelta aquí
-  if (!usuario) {
+  if (!sesion.usuario) {
     window.location.href = "login.html?volver=admin.html";
     return;
   }
   // Con sesión pero sin rol de administrador
-  if (rol !== "admin") {
+  if (sesion.rol !== "admin") {
     mostrarMensaje(mensajeAdmin, "No tienes permisos para ver esta página. Te llevamos a tu panel...", "error");
-    setTimeout(() => {
-      window.location.href = "panel.html";
-    }, 2500);
+    setTimeout(irAlPanelDelCliente, 2500);
     return;
   }
 
-  saludo.textContent = "Hola, " + (usuario.displayName || usuario.email) + ". Gestiona las solicitudes de cotización y la flota de equipos.";
+  let nombreVisible = sesion.usuario.email;
+  if (sesion.nombre) {
+    nombreVisible = sesion.nombre;
+  }
+  saludo.textContent = "Hola, " + nombreVisible + ". Gestiona las solicitudes de cotización y la flota de equipos.";
   contenido.hidden = false;
   await cargarDatos();
 }

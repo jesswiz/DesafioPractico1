@@ -26,14 +26,16 @@ let solicitudes = [];
 // Escribe los números del resumen
 function mostrarResumen() {
   const conteo = contarPorEstado(solicitudes);
-  resumen.querySelectorAll("[data-estado]").forEach((numero) => {
+  const numeros = resumen.querySelectorAll("[data-estado]");
+  for (const numero of numeros) {
     numero.textContent = conteo[numero.dataset.estado];
-  });
+  }
 }
 
 // Agrega una fila "dato: valor" a una lista de definición <dl>
 function agregarDato(listaDatos, etiqueta, valor) {
-  listaDatos.append(crearElemento("dt", "", etiqueta), crearElemento("dd", "", valor));
+  listaDatos.append(crearElemento("dt", "", etiqueta));
+  listaDatos.append(crearElemento("dd", "", valor));
 }
 
 // Crea la tarjeta de una solicitud
@@ -45,13 +47,27 @@ function crearTarjetaSolicitud(solicitud) {
   cabecera.append(crearElemento("span", "estado " + claseEstado(solicitud.estado), solicitud.estado));
   tarjeta.append(cabecera);
 
+  // Textos que dependen de un valor
+  let textoDuracion = solicitud.duracion + " días";
+  if (solicitud.duracion === 1) {
+    textoDuracion = "1 día";
+  }
+  let textoOperador = "Sin operador";
+  if (solicitud.conOperador) {
+    textoOperador = "Con operador";
+  }
+  let textoTransporte = "No";
+  if (solicitud.transporte) {
+    textoTransporte = "Con lowboy";
+  }
+
   const datos = crearElemento("dl", "solicitud-datos");
   agregarDato(datos, "Cantidad", String(solicitud.cantidad));
   agregarDato(datos, "Inicio", formatearFecha(solicitud.inicio));
-  agregarDato(datos, "Duración", solicitud.duracion + (solicitud.duracion === 1 ? " día" : " días"));
+  agregarDato(datos, "Duración", textoDuracion);
   agregarDato(datos, "Ubicación", solicitud.ubicacion);
-  agregarDato(datos, "Operador", solicitud.conOperador ? "Con operador" : "Sin operador");
-  agregarDato(datos, "Transporte", solicitud.transporte ? "Con lowboy" : "No");
+  agregarDato(datos, "Operador", textoOperador);
+  agregarDato(datos, "Transporte", textoTransporte);
   agregarDato(datos, "Enviada", formatearMarcaTiempo(solicitud.creadoEn));
   tarjeta.append(datos);
 
@@ -63,7 +79,9 @@ function crearTarjetaSolicitud(solicitud) {
   if (solicitud.estado === "pendiente") {
     const botonCancelar = crearElemento("button", "boton-peligro", "Cancelar solicitud");
     botonCancelar.type = "button";
-    botonCancelar.addEventListener("click", () => cancelar(solicitud, botonCancelar));
+    botonCancelar.addEventListener("click", function () {
+      cancelar(solicitud, botonCancelar);
+    });
     tarjeta.append(botonCancelar);
   }
 
@@ -79,10 +97,15 @@ function mostrarSolicitudes() {
     return;
   }
 
+  // Se dejan solo las del estado elegido ("" = todas)
   const estado = selectEstado.value;
-  const filtradas = ordenarRecientesPrimero(
-    solicitudes.filter((solicitud) => estado === "" || solicitud.estado === estado)
-  );
+  const delEstado = [];
+  for (const solicitud of solicitudes) {
+    if (estado === "" || solicitud.estado === estado) {
+      delEstado.push(solicitud);
+    }
+  }
+  const filtradas = ordenarRecientesPrimero(delEstado);
 
   if (filtradas.length === 0) {
     mostrarMensaje(mensaje, "No tienes solicitudes con el estado “" + estado + "”.", "info");
@@ -90,9 +113,9 @@ function mostrarSolicitudes() {
   }
 
   ocultarMensaje(mensaje);
-  filtradas.forEach((solicitud) => {
+  for (const solicitud of filtradas) {
     lista.append(crearTarjetaSolicitud(solicitud));
-  });
+  }
 }
 
 /* ---------- ACCIONES ---------- */
@@ -108,7 +131,13 @@ async function cancelar(solicitud, boton) {
   try {
     await cancelarSolicitud(solicitud.id);
     // Se quita del arreglo y se vuelve a dibujar todo
-    solicitudes = solicitudes.filter((s) => s.id !== solicitud.id);
+    const restantes = [];
+    for (const otra of solicitudes) {
+      if (otra.id !== solicitud.id) {
+        restantes.push(otra);
+      }
+    }
+    solicitudes = restantes;
     mostrarResumen();
     mostrarSolicitudes();
     mostrarMensaje(mensaje, "La solicitud fue cancelada.", "exito");
@@ -123,24 +152,28 @@ async function cancelar(solicitud, boton) {
 /* ---------- AL ABRIR LA PÁGINA ---------- */
 
 async function iniciar() {
-  const { usuario, rol } = await obtenerSesion();
+  const sesion = await obtenerSesion();
 
   // Página protegida: sin sesión se va a login y luego regresa aquí
-  if (!usuario) {
+  if (!sesion.usuario) {
     window.location.href = "login.html?volver=panel.html";
     return;
   }
   // El administrador tiene su propio panel
-  if (rol === "admin") {
+  if (sesion.rol === "admin") {
     window.location.href = "admin.html";
     return;
   }
 
-  saludo.textContent = "Hola, " + (usuario.displayName || usuario.email) + ". Revisa el estado de tus solicitudes de cotización.";
+  let nombreVisible = sesion.usuario.email;
+  if (sesion.nombre) {
+    nombreVisible = sesion.nombre;
+  }
+  saludo.textContent = "Hola, " + nombreVisible + ". Revisa el estado de tus solicitudes de cotización.";
   mostrarMensaje(mensaje, "Cargando tus solicitudes...", "carga");
 
   try {
-    solicitudes = await obtenerSolicitudesDeUsuario(usuario.uid);
+    solicitudes = await obtenerSolicitudesDeUsuario(sesion.usuario.uid);
     mostrarResumen();
     mostrarSolicitudes();
   } catch (error) {
@@ -150,7 +183,10 @@ async function iniciar() {
 }
 
 // Eventos del filtro
+function evitarRecarga(evento) {
+  evento.preventDefault();
+}
 selectEstado.addEventListener("change", mostrarSolicitudes);
-formFiltros.addEventListener("submit", (evento) => evento.preventDefault());
+formFiltros.addEventListener("submit", evitarRecarga);
 
 iniciar();

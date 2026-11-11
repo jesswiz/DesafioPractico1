@@ -7,16 +7,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 
-// Registra un usuario nuevo y crea su documento en "usuarios" con rol "cliente"
+// Registra un usuario nuevo y crea su documento en "usuarios" con rol "cliente".
+// El nombre se guarda en ese documento.
 export async function registrarUsuario(nombre, correo, contrasena) {
   const credencial = await createUserWithEmailAndPassword(auth, correo, contrasena);
   const usuario = credencial.user;
-  // Guarda el nombre en el perfil de Authentication
-  await updateProfile(usuario, { displayName: nombre });
   // Guarda el documento usuarios/{uid}.
   // Se usa usuario.email (como lo guardó Firebase) porque las reglas exigen
   // que coincida exactamente con el correo de la sesión.
@@ -44,24 +42,41 @@ export async function obtenerRol(uid) {
   return "cliente";
 }
 
-// Espera a que Firebase sepa si hay sesión y devuelve { usuario, rol }.
-// Si no hay sesión, usuario y rol son null.
+// Espera a que Firebase sepa si hay sesión y devuelve un objeto "sesion" con:
+//   sesion.usuario -> el usuario de Firebase (null si no hay sesión)
+//   sesion.rol     -> "cliente" o "admin" (null si no hay sesión)
+//   sesion.nombre  -> el nombre guardado en usuarios/{uid} ("" si no se encontró)
 export function obtenerSesion() {
-  return new Promise((resolver) => {
+  return new Promise(function (resolver) {
     // onAuthStateChanged avisa cuando Firebase termina de revisar la sesión
-    const dejarDeEscuchar = onAuthStateChanged(auth, async (usuario) => {
+    const dejarDeEscuchar = onAuthStateChanged(auth, async function (usuario) {
       dejarDeEscuchar(); // solo nos interesa la primera respuesta
+
+      const sesion = {};
+      sesion.usuario = null;
+      sesion.rol = null;
+      sesion.nombre = "";
+
       if (!usuario) {
-        resolver({ usuario: null, rol: null });
+        resolver(sesion);
         return;
       }
+
+      sesion.usuario = usuario;
+      sesion.rol = "cliente";
       try {
-        const rol = await obtenerRol(usuario.uid);
-        resolver({ usuario: usuario, rol: rol });
+        // El rol y el nombre están en el documento usuarios/{uid}
+        const datos = await obtenerUsuario(usuario.uid);
+        if (datos && datos.rol) {
+          sesion.rol = datos.rol;
+        }
+        if (datos && datos.nombre) {
+          sesion.nombre = datos.nombre;
+        }
       } catch (error) {
         console.error("No se pudo leer el rol:", error);
-        resolver({ usuario: usuario, rol: "cliente" });
       }
+      resolver(sesion);
     });
   });
 }
@@ -78,5 +93,9 @@ export function mensajeErrorAuth(error) {
     "auth/too-many-requests": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
     "auth/network-request-failed": "Sin conexión. Revisa tu internet."
   };
-  return mensajes[error.code] || "Ocurrió un error. Inténtalo de nuevo.";
+  const texto = mensajes[error.code];
+  if (texto) {
+    return texto;
+  }
+  return "Ocurrió un error. Inténtalo de nuevo.";
 }

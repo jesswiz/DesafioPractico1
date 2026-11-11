@@ -46,17 +46,39 @@ export function desbloquearBoton(boton) {
 
 // Convierte "en evaluación" en "estado-en-evaluacion" para usarlo como clase CSS
 export function claseEstado(estado) {
-  const sinTildes = estado.normalize("NFD").replace(/[̀-ͯ]/g, "");
-  return "estado-" + sinTildes.replace(/\s+/g, "-");
+  const sinTildes = normalizarTexto(estado);
+  const conGuiones = sinTildes.split(" ").join("-");
+  return "estado-" + conGuiones;
 }
+
+// Letras con tilde y la letra que las reemplaza (se usa en normalizarTexto)
+const SIN_TILDES = {
+  "á": "a",
+  "é": "e",
+  "í": "i",
+  "ó": "o",
+  "ú": "u",
+  "ü": "u",
+  "ñ": "n"
+};
 
 // Pasa un texto a minúsculas y sin tildes para comparar en búsquedas.
 // Así "Camión" y "camion" se consideran iguales.
 export function normalizarTexto(texto) {
-  return String(texto || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  if (!texto) {
+    return "";
+  }
+  const minusculas = String(texto).toLowerCase();
+  let resultado = "";
+  // Se revisa letra por letra: si tiene tilde se cambia, si no se deja igual
+  for (const letra of minusculas) {
+    if (SIN_TILDES[letra]) {
+      resultado = resultado + SIN_TILDES[letra];
+    } else {
+      resultado = resultado + letra;
+    }
+  }
+  return resultado;
 }
 
 // Formatea una fecha "AAAA-MM-DD" como "DD/MM/AAAA"
@@ -64,11 +86,14 @@ export function formatearFecha(textoFecha) {
   if (!textoFecha) {
     return "";
   }
-  const [anio, mes, dia] = textoFecha.split("-");
+  const partes = textoFecha.split("-");
+  const anio = partes[0];
+  const mes = partes[1];
+  const dia = partes[2];
   return dia + "/" + mes + "/" + anio;
 }
 
-// Formatea un Timestamp de Firestore (como creadoEn) a fecha y hora local
+// Formatea la fecha de Firestore (como creadoEn) a fecha y hora local
 export function formatearMarcaTiempo(marca) {
   if (!marca || !marca.toDate) {
     return "";
@@ -79,7 +104,84 @@ export function formatearMarcaTiempo(marca) {
 // Devuelve la fecha de hoy como "AAAA-MM-DD" (hora local), útil para inputs de tipo date
 export function fechaHoy() {
   const hoy = new Date();
-  const mes = String(hoy.getMonth() + 1).padStart(2, "0");
-  const dia = String(hoy.getDate()).padStart(2, "0");
-  return hoy.getFullYear() + "-" + mes + "-" + dia;
+  const anio = hoy.getFullYear();
+  const mes = hoy.getMonth() + 1;
+  const dia = hoy.getDate();
+
+  // El mes y el día deben tener dos dígitos: 5 -> "05"
+  let textoMes = String(mes);
+  if (mes < 10) {
+    textoMes = "0" + mes;
+  }
+  let textoDia = String(dia);
+  if (dia < 10) {
+    textoDia = "0" + dia;
+  }
+
+  return anio + "-" + textoMes + "-" + textoDia;
+}
+
+/* ---------- VALIDACIONES SENCILLAS ---------- */
+
+// Letras que se aceptan en un nombre (con tildes, ñ, ü) y el espacio
+export const LETRAS_Y_ESPACIOS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúÁÉÍÓÚñÑüÜ ";
+
+// Devuelve true si cada carácter del texto está dentro de "permitidos"
+export function soloContiene(texto, permitidos) {
+  for (const letra of texto) {
+    if (!permitidos.includes(letra)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Devuelve true si el texto tiene al menos una letra de la "a" a la "z" (mayúscula o minúscula)
+export function tieneLetra(texto) {
+  for (const letra of texto) {
+    if (letra >= "a" && letra <= "z") {
+      return true;
+    }
+    if (letra >= "A" && letra <= "Z") {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Devuelve true si el texto tiene al menos un número del 0 al 9
+export function tieneNumero(texto) {
+  for (const letra of texto) {
+    if (letra >= "0" && letra <= "9") {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Revisa un correo: sin espacios, una sola @, algo escrito antes de la @
+// y, después de la @, un punto que tenga texto antes y después (ej. empresa.com)
+export function esCorreoValido(correo) {
+  if (correo.includes(" ")) {
+    return false;
+  }
+
+  const partes = correo.split("@");
+  if (partes.length !== 2) {
+    return false;
+  }
+
+  const usuario = partes[0];
+  const dominio = partes[1];
+  if (usuario === "") {
+    return false;
+  }
+
+  // Se busca un punto que no sea el primer ni el último carácter del dominio
+  for (let i = 1; i < dominio.length - 1; i++) {
+    if (dominio[i] === ".") {
+      return true;
+    }
+  }
+  return false;
 }

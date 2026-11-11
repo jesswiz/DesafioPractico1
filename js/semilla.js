@@ -243,6 +243,16 @@ export const SOLICITUDES_EJEMPLO = [
   }
 ];
 
+// Busca en EQUIPOS_INICIALES el nombre del equipo que tiene ese id
+function buscarNombreEquipo(idEquipo) {
+  for (const equipo of EQUIPOS_INICIALES) {
+    if (equipo.id === idEquipo) {
+      return equipo.nombre;
+    }
+  }
+  return "";
+}
+
 // Carga los datos iniciales en Firestore. Solo funciona si la colección
 // "equipos" está vacía, para no duplicar datos. Devuelve cuántos se guardaron.
 export async function cargarDatosIniciales() {
@@ -252,15 +262,14 @@ export async function cargarDatosIniciales() {
   }
 
   // Completa equipoNombre de cada solicitud a partir de su equipoId
-  const solicitudes = SOLICITUDES_EJEMPLO.map((solicitud) => {
-    const equipo = EQUIPOS_INICIALES.find((e) => e.id === solicitud.equipoId);
-    return { ...solicitud, equipoNombre: equipo.nombre };
-  });
+  for (const solicitud of SOLICITUDES_EJEMPLO) {
+    solicitud.equipoNombre = buscarNombreEquipo(solicitud.equipoId);
+  }
 
-  await guardarDatosIniciales(EQUIPOS_INICIALES, solicitudes);
+  await guardarDatosIniciales(EQUIPOS_INICIALES, SOLICITUDES_EJEMPLO);
 
-  return {
-    equipos: EQUIPOS_INICIALES.length,
-    solicitudes: solicitudes.length
-  };
+  const resultado = {};
+  resultado.equipos = EQUIPOS_INICIALES.length;
+  resultado.solicitudes = SOLICITUDES_EJEMPLO.length;
+  return resultado;
 }

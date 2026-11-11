@@ -14,10 +14,10 @@ async function prepararMenu() {
     return;
   }
 
-  const { usuario, rol } = await obtenerSesion();
+  const sesion = await obtenerSesion();
 
   // Sin sesión: se deja el enlace "Ingresar" que ya viene en el HTML
-  if (!usuario) {
+  if (!sesion.usuario) {
     return;
   }
 
@@ -26,9 +26,20 @@ async function prepararMenu() {
 
   const enlacePanel = document.createElement("a");
   // El administrador va a su propio panel
-  enlacePanel.href = rol === "admin" ? "admin.html" : "panel.html";
+  if (sesion.rol === "admin") {
+    enlacePanel.href = "admin.html";
+  } else {
+    enlacePanel.href = "panel.html";
+  }
   enlacePanel.textContent = "Mi panel";
-  enlacePanel.title = "Sesión de " + (usuario.displayName || usuario.email);
+
+  // Al pasar el mouse se ve de quién es la sesión
+  let nombreVisible = sesion.usuario.email;
+  if (sesion.nombre) {
+    nombreVisible = sesion.nombre;
+  }
+  enlacePanel.title = "Sesión de " + nombreVisible;
+
   // Marca el enlace como activo si estamos en esa página
   if (window.location.pathname.endsWith(enlacePanel.getAttribute("href"))) {
     enlacePanel.classList.add("activo");
@@ -39,7 +50,8 @@ async function prepararMenu() {
   botonSalir.className = "boton-salir";
   botonSalir.textContent = "Salir";
 
-  botonSalir.addEventListener("click", async () => {
+  // Cierra la sesión y vuelve al inicio
+  async function salir() {
     botonSalir.disabled = true;
     botonSalir.textContent = "Saliendo...";
     try {
@@ -51,9 +63,12 @@ async function prepararMenu() {
       botonSalir.disabled = false;
       botonSalir.textContent = "Salir";
     }
-  });
+  }
 
-  itemSesion.append(enlacePanel, botonSalir);
+  botonSalir.addEventListener("click", salir);
+
+  itemSesion.append(enlacePanel);
+  itemSesion.append(botonSalir);
 }
 
 prepararMenu();
