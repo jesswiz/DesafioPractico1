@@ -10,12 +10,12 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/13.1.0/firebase
 // Estos valores identifican el proyecto, no son contraseñas: la seguridad real
 // la dan las reglas de Firestore (firestore.rules).
 const configuracion = {
-  apiKey: "PEGA_AQUI_TU_API_KEY",
-  authDomain: "PEGA_AQUI_TU_PROYECTO.firebaseapp.com",
-  projectId: "PEGA_AQUI_TU_PROYECTO",
-  storageBucket: "PEGA_AQUI_TU_PROYECTO.appspot.com",
-  messagingSenderId: "PEGA_AQUI_TU_SENDER_ID",
-  appId: "PEGA_AQUI_TU_APP_ID"
+  apiKey: "AIzaSyD-GUjD2sHEEsVh43DmYh3lWaTPnlItPxA",
+  authDomain: "logic-trans.firebaseapp.com",
+  projectId: "logic-trans",
+  storageBucket: "logic-trans.firebasestorage.app",
+  messagingSenderId: "115133777190",
+  appId: "1:115133777190:web:2bab1ca412af6499ddade7",
 };
 
 // Se inicializa la aplicación una sola vez
