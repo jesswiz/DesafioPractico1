@@ -72,3 +72,18 @@ async function prepararMenu() {
 }
 
 prepararMenu();
+
+/* Abrir y cerrar menú de hamburguesa */
+const encabezado = document.querySelector(".encabezado");
+const botonHamburguesa = document.querySelector(".boton-hamburguesa");
+
+if (encabezado && botonHamburguesa) {
+  botonHamburguesa.addEventListener("click", () => {
+    const abierto = encabezado.classList.toggle("menu-abierto");
+
+    botonHamburguesa.textContent = abierto ? "✕" : "☰";
+    botonHamburguesa.setAttribute("aria-expanded", String(abierto));
+    botonHamburguesa.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+  });
+}
+
