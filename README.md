@@ -22,10 +22,10 @@ Proyecto del **Desafío Práctico II de Desarrollo Web I (ESEN, 2026)**.
 
 ## Credenciales de prueba
 
-| Rol | Correo | Contraseña |
-| --- | --- | --- |
-| Cliente | cliente@web.com | cliente123 |
-| Administrador | admin@web.com | prueba123 |
+| Rol | Correo |
+| --- | --- |
+| Cliente | cliente@web.com |
+| Administrador | admin@web.com |
 
 ## Tecnologías
 
