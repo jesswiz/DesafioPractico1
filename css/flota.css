@@ -4,3 +4,69 @@
   background-size: cover;
   background-position: center;
 }
+
+/* Alinea las secciones de las tarjetas del catálogo */
+#lista-equipos {
+  display: grid;
+  align-items: stretch;
+  row-gap: 0;
+}
+
+#lista-equipos .tarjeta {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 8;
+  margin-bottom: 1.5rem;
+}
+
+#lista-equipos .tarjeta > img {
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+}
+
+#lista-equipos .tarjeta-texto {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: 2 / span 7;
+  align-items: start;
+  row-gap: 0.65rem;
+}
+
+#lista-equipos .tarjeta-texto > * {
+  margin-block: 0;
+}
+
+#lista-equipos .etiqueta-categoria {
+  grid-row: 1;
+  justify-self: center;
+}
+
+#lista-equipos .tarjeta-texto > h3 {
+  grid-row: 2;
+}
+
+#lista-equipos .tarjeta-texto > p:nth-of-type(1) {
+  grid-row: 3;
+}
+
+#lista-equipos .tarjeta-texto > p:nth-of-type(2) {
+  grid-row: 4;
+}
+
+#lista-equipos .tarjeta-texto > ul {
+  grid-row: 5;
+}
+
+#lista-equipos .disponibilidad {
+  grid-row: 6;
+  justify-self: center;
+}
+
+#lista-equipos .tarjeta-texto > .enlace {
+  grid-row: 7;
+  justify-self: center;
+}
