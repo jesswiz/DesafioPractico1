@@ -24,8 +24,8 @@ Proyecto del **Desafío Práctico II de Desarrollo Web I (ESEN, 2026)**.
 
 | Rol | Correo | Contraseña |
 | --- | --- | --- |
-| Cliente | | |
-| Administrador | | |
+| Cliente | cliente@web.com | cliente123 |
+| Administrador | admin@web.com | prueba123 |
 
 ## Tecnologías
 
